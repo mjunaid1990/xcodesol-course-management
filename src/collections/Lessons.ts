@@ -1,8 +1,11 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Where } from 'payload'
 import { lessonRevalidationHooks } from '../lib/revalidation'
 
-const canEdit = ({ req: { user } }: { req: { user?: { role?: string } | null } }) =>
-  user?.role === 'admin' || user?.role === 'editor'
+const isStaff = (user?: unknown) => {
+  if (!user || typeof user !== 'object' || !('role' in user)) return false
+  return user.role === 'admin' || user.role === 'editor'
+}
+const canEdit: NonNullable<CollectionConfig['access']>['create'] = ({ req }) => isStaff(req.user)
 
 export const Lessons: CollectionConfig = {
   slug: 'lessons',
@@ -11,7 +14,7 @@ export const Lessons: CollectionConfig = {
   access: {
     read: async ({ req }) => {
       if (req.user?.role === 'admin' || req.user?.role === 'editor') return true
-      const previewFilter = {
+      const previewFilter: Where = {
         and: [
           { freePreview: { equals: true } },
           { 'section.course._status': { equals: 'published' } },
@@ -55,11 +58,11 @@ export const Lessons: CollectionConfig = {
     { name: 'type', type: 'select', required: true, defaultValue: 'text', options: ['video', 'text', 'resource', 'quiz'] },
     { name: 'freePreview', type: 'checkbox', defaultValue: false, index: true },
     { name: 'durationMinutes', type: 'number', min: 0 },
-    { name: 'videoAssetId', type: 'text', admin: { condition: (_, siblingData) => siblingData.type === 'video', description: 'Video provider asset ID. Store provider credentials outside the CMS.' } },
+    { name: 'videoAssetId', type: 'text', admin: { condition: (_, siblingData) => siblingData.type === 'video', description: 'Mux signed playback ID (not the asset ID). Configure Mux signing credentials in server environment variables.' } },
     { name: 'content', type: 'richText', admin: { condition: (_, siblingData) => siblingData.type === 'text' } },
     { name: 'resources', type: 'array', admin: { condition: (_, siblingData) => siblingData.type === 'resource' }, fields: [
       { name: 'label', type: 'text', required: true },
-      { name: 'file', type: 'upload', relationTo: 'media', required: true },
+      { name: 'file', type: 'upload', relationTo: 'course-resources', required: true },
     ] },
   ],
 }

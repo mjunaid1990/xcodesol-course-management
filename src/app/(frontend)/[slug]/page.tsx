@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const result = await payload.find({ collection: 'pages', where: { slug: { equals: slug }, ...(!isEnabled ? { _status: { equals: 'published' as const } } : {}) }, limit: 1, draft: isEnabled, overrideAccess: isEnabled })
   const page = result.docs[0]
   if (!page) return {}
-  const seo = page.seo as { title?: string; description?: string } | null
+  const seo = page.seo as { title?: string; description?: string; image?: { url?: string; alt?: string } | string | null } | null
   const image = seo?.image && typeof seo.image === 'object' ? seo.image as { url?: string; alt?: string } : null
   return { title: seo?.title || page.title, description: seo?.description || undefined, openGraph: { title: seo?.title || page.title, description: seo?.description || undefined, images: image?.url ? [{ url: image.url, alt: image.alt || page.title }] : undefined } }
 }

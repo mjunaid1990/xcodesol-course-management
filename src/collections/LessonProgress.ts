@@ -1,6 +1,9 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from 'payload'
 
-const isStaff = (user?: { role?: string } | null) => user?.role === 'admin' || user?.role === 'editor'
+const isStaff = (user?: unknown) => {
+  if (!user || typeof user !== 'object' || !('role' in user)) return false
+  return user.role === 'admin' || user.role === 'editor'
+}
 const getID = (value: unknown) => typeof value === 'object' && value !== null && 'id' in value ? String(value.id) : String(value || '')
 
 const verifyLessonAccess: CollectionBeforeChangeHook = async ({ data, operation, originalDoc, req }) => {
@@ -37,7 +40,7 @@ export const LessonProgress: CollectionConfig = {
   indexes: [{ fields: ['user', 'lesson'], unique: true }],
   admin: { useAsTitle: 'id', defaultColumns: ['user', 'lesson', 'completed', 'updatedAt'] },
   access: {
-    read: ({ req }) => isStaff(req.user) ? true : req.user ? { user: { equals: req.user.id } } : false,
+    read: ({ req }) => req.user?.role === 'admin' ? true : req.user ? { user: { equals: req.user.id } } : false,
     create: ({ req }) => req.user?.role === 'student' || isStaff(req.user),
     update: ({ req }) => req.user?.role === 'student' || isStaff(req.user),
     delete: ({ req }) => req.user?.role === 'admin',

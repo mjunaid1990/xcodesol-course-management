@@ -1,8 +1,11 @@
 import type { CollectionConfig } from 'payload'
 import { sectionRevalidationHooks } from '../lib/revalidation'
 
-const canEdit = ({ req: { user } }: { req: { user?: { role?: string } | null } }) =>
-  user?.role === 'admin' || user?.role === 'editor'
+const isStaff = (user?: unknown) => {
+  if (!user || typeof user !== 'object' || !('role' in user)) return false
+  return user.role === 'admin' || user.role === 'editor'
+}
+const canEdit: NonNullable<CollectionConfig['access']>['create'] = ({ req }) => isStaff(req.user)
 
 export const Sections: CollectionConfig = {
   slug: 'sections',

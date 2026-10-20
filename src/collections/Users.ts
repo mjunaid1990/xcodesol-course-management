@@ -6,10 +6,16 @@ export const Users: CollectionConfig = {
   admin: { useAsTitle: 'email', defaultColumns: ['email', 'role', 'createdAt'] },
   access: {
     admin: ({ req: { user } }) => user?.role === 'admin',
-    create: ({ req: { user } }) => user?.role === 'admin',
+    create: ({ req: { user } }) => user?.role === 'admin' || !user,
     delete: ({ req: { user } }) => user?.role === 'admin',
-    read: ({ req: { user } }) => user?.role === 'admin',
-    update: ({ req: { user } }) => user?.role === 'admin',
+    read: ({ req }) => req.user?.role === 'admin' ? true : req.user ? { id: { equals: req.user.id } } : false,
+    update: ({ req }) => req.user?.role === 'admin' ? true : req.user ? { id: { equals: req.user.id } } : false,
+  },
+  hooks: {
+    beforeChange: [({ data, req }) => {
+      if (req.user?.role === 'admin') return data
+      return { name: data.name }
+    }],
   },
   fields: [
     { name: 'name', type: 'text' },

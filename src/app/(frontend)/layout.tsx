@@ -4,13 +4,15 @@ import '../globals.css'
 import '../content.css'
 import { getPayloadClient } from '@/lib/payload'
 
+export const dynamic = 'force-dynamic'
+
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope' })
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const payload = await getPayloadClient()
-    const settings = await payload.findGlobal({ slug: 'site-settings' })
+    const settings = await payload.findGlobal({ slug: 'site-settings' }) as unknown as { seo?: unknown; siteName?: string; navigation?: unknown; announcement?: unknown }
     const seo = settings.seo as { title?: string; description?: string; openGraphImage?: { url?: string } | string } | undefined
     const image = seo?.openGraphImage && typeof seo.openGraphImage === 'object' ? seo.openGraphImage.url : undefined
     return {
@@ -33,11 +35,11 @@ export default async function FrontendLayout({ children }: Readonly<{ children: 
   let announcement: { enabled?: boolean; text?: string; link?: string } | null = null
   try {
     const payload = await getPayloadClient()
-    const settings = await payload.findGlobal({ slug: 'site-settings' })
+    const settings = await payload.findGlobal({ slug: 'site-settings' }) as unknown as { seo?: unknown; siteName?: string; navigation?: unknown; announcement?: unknown }
     if (Array.isArray(settings.navigation) && settings.navigation.length) {
       menu = settings.navigation as Array<{ label: string; url: string }>
     }
-    announcement = settings.announcement as typeof announcement
+    announcement = settings.announcement as { enabled?: boolean; text?: string; link?: string } | null
   } catch {
     menu = [
       { label: 'Courses', url: '/courses' },
@@ -50,7 +52,7 @@ export default async function FrontendLayout({ children }: Readonly<{ children: 
       {announcement?.enabled && announcement.text && <div className="announcement-bar">{announcement.link ? <a href={announcement.link}>{announcement.text} ↗</a> : announcement.text}</div>}
       <header className="site-header">
         <a className="brand" href="/" aria-label="Fieldnotes home"><span className="brand-mark">F</span> fieldnotes</a>
-        <nav aria-label="Main navigation">
+        <nav className="site-navigation" aria-label="Main navigation">
           {menu.map((item) => <a href={item.url} key={`${item.label}-${item.url}`}>{item.label}</a>)}
         </nav>
         <a className="header-action" href="/login">Student sign in <span aria-hidden="true">↗</span></a>

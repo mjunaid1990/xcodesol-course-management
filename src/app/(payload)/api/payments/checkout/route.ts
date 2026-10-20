@@ -13,6 +13,7 @@ export async function POST(request: Request) {
   const payload = await getPayloadClient()
   const { user } = await payload.auth({ headers: await headers() })
   if (!user || user.role !== 'student') return Response.json({ message: 'Sign in as a student to continue.' }, { status: 401 })
+  if (!user.email) return Response.json({ message: 'Your account must have an email address to check out.' }, { status: 400 })
 
   const body = await request.json().catch(() => null) as { courseID?: unknown } | null
   if (typeof body?.courseID !== 'string' && typeof body?.courseID !== 'number') return Response.json({ message: 'A valid course is required.' }, { status: 400 })
