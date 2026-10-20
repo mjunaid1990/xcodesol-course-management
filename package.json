@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+    "build": "npm run migrate:check && npm run migrate && cross-env NODE_OPTIONS=--no-deprecation next build",
     "start": "next start",
     "lint": "next lint",
     "payload": "payload",
@@ -12,6 +12,7 @@
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
+    "migrate:check": "node scripts/check-migrations.mjs",
     "seed": "payload run src/seed.ts"
   },
   "dependencies": {
