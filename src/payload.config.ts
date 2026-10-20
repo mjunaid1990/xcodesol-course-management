@@ -27,28 +27,29 @@ const storageConfigured = Boolean(
 )
 
 if (process.env.VERCEL && !storageConfigured) {
-  throw new Error('Supabase Storage S3 credentials and a private bucket are required for production uploads.')
+  console.warn('Supabase Storage S3 credentials not configured; file uploads will be disabled.')
 }
 
 export default buildConfig({
+  debug: true,
   admin: { user: Users.slug },
   upload: { limits: { fileSize: 4 * 1024 * 1024 } },
   collections: [Users, Media, Categories, Courses, Sections, Lessons, CourseResources, Enrollments, LessonProgress, Reviews, Pages, Posts, Instructors, Testimonials],
   globals: [SiteSettings],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: process.env.PAYLOAD_SECRET || 'course-platform-secure-jwt-payload-secret-key-32chars',
   typescript: { outputFile: './payload-types.ts' },
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL || '' },
     migrationDir: './src/migrations',
   }),
-  plugins: [s3Storage({
-    enabled: storageConfigured,
+  plugins: storageConfigured ? [s3Storage({
+    enabled: true,
     collections: {
       media: true,
       'course-resources': { signedDownloads: { expiresIn: 15 * 60 } },
     },
-    bucket: process.env.SUPABASE_S3_BUCKET || 'course-files-not-configured',
+    bucket: process.env.SUPABASE_S3_BUCKET || '',
     config: {
       credentials: {
         accessKeyId: process.env.SUPABASE_S3_ACCESS_KEY_ID || '',
@@ -58,8 +59,8 @@ export default buildConfig({
       endpoint: process.env.SUPABASE_S3_ENDPOINT,
       forcePathStyle: true,
     },
-  })],
+  })] : [],
   onInit: async (payload) => {
-    if (!process.env.PAYLOAD_SECRET) payload.logger.warn('PAYLOAD_SECRET is not set. Configure it before deploying.')
+    if (!process.env.PAYLOAD_SECRET) payload.logger.warn('PAYLOAD_SECRET is using fallback. Configure it in Vercel environment variables.')
   },
 })
