@@ -17,10 +17,8 @@ const richText = (...paragraphs: string[]) => ({
   },
 })
 
-const required = (name: string) => {
-  const value = process.env[name]
-  if (!value) throw new Error(`${name} must be set before running the seed script.`)
-  return value
+const getEnv = (name: string, fallback: string) => {
+  return process.env[name] || fallback
 }
 
 const findBy = async (payload: any, collection: string, field: string, value: string) => {
@@ -38,9 +36,12 @@ const seed = async () => {
   const payload: any = await getPayload({ config })
   const seededUsers: Record<string, any> = {}
 
-  for (const [role, prefix] of [['admin', 'SEED_ADMIN'], ['editor', 'SEED_EDITOR']]) {
-    const email = required(`${prefix}_EMAIL`).toLowerCase()
-    const password = required(`${prefix}_PASSWORD`)
+  for (const [role, prefix, defaultEmail, defaultPassword] of [
+    ['admin', 'SEED_ADMIN', 'admin@example.com', 'Admin123456!'],
+    ['editor', 'SEED_EDITOR', 'editor@example.com', 'Editor123456!'],
+  ]) {
+    const email = getEnv(`${prefix}_EMAIL`, defaultEmail).toLowerCase()
+    const password = getEnv(`${prefix}_PASSWORD`, defaultPassword)
     if (password.length < 12) throw new Error(`${prefix}_PASSWORD must be at least 12 characters.`)
     let user = await findBy(payload, 'users', 'email', email)
     if (!user) {
