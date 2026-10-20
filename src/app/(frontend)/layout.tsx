@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter, Manrope } from 'next/font/google'
+import { DM_Sans, DM_Serif_Display } from 'next/font/google'
 import '../globals.css'
 import '../content.css'
 import { getPayloadClient } from '@/lib/payload'
 
 export const dynamic = 'force-dynamic'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope' })
+const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm-sans' })
+const dmSerif = DM_Serif_Display({ subsets: ['latin'], weight: '400', variable: '--font-dm-serif' })
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -48,7 +48,7 @@ export default async function FrontendLayout({ children }: Readonly<{ children: 
     ]
   }
   return (
-    <div className={`${inter.variable} ${manrope.variable}`}>
+    <div className={`font-theme ${dmSans.variable} ${dmSerif.variable}`}>
       {announcement?.enabled && announcement.text && <div className="announcement-bar">{announcement.link ? <a href={announcement.link}>{announcement.text} ↗</a> : announcement.text}</div>}
       <header className="site-header">
         <a className="brand" href="/" aria-label="Fieldnotes home"><span className="brand-mark">F</span> fieldnotes</a>
