@@ -48,6 +48,7 @@ const seed = async () => {
       user = await payload.create({
         collection: 'users',
         data: { email, password, name: role === 'admin' ? 'Course Administrator' : 'Course Editor', role },
+        context: { seed: true },
         overrideAccess: true,
       })
     }

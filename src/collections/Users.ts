@@ -12,9 +12,14 @@ export const Users: CollectionConfig = {
     update: ({ req }) => req.user?.role === 'admin' ? true : req.user ? { id: { equals: req.user.id } } : false,
   },
   hooks: {
-    beforeChange: [({ data, req }) => {
-      if (req.user?.role === 'admin') return data
-      return { name: data.name }
+    beforeChange: [({ data, operation, req }) => {
+      if (req.user?.role === 'admin' || req.context?.seed) return data
+
+      // Public account creation must retain Payload's auth fields while always
+      // assigning the least-privileged role.
+      if (operation === 'create') return { ...data, role: 'student' }
+
+      return data
     }],
   },
   fields: [

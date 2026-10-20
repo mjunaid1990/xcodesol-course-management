@@ -32,7 +32,9 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
       }
       const response = await fetch('/api/users/login', { method: 'POST', headers: { 'content-type': 'application/json' }, credentials: 'include', body: JSON.stringify({ email: values.email, password: values.password }) })
       if (!response.ok) throw new Error(mode === 'register' ? 'Account created. Please sign in.' : 'Email or password was not recognized.')
-      router.push('/dashboard')
+      const { user } = await response.json()
+      const next = new URLSearchParams(window.location.search).get('next')
+      router.push(user?.role === 'student' ? (next?.startsWith('/') ? next : '/dashboard') : '/admin')
       router.refresh()
     } catch (error) {
       setServerError(error instanceof Error ? error.message : 'Something went wrong. Please try again.')
