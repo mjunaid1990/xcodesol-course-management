@@ -899,7 +899,7 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
       "testimonials_id" integer REFERENCES "testimonials"("id") ON DELETE CASCADE
     );
     CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_parent_idx" ON "payload_locked_documents_rels" ("parent_id");
-  \`)
+  `)
 }
 
 export async function down({ db }: MigrateDownArgs): Promise<void> {
@@ -975,5 +975,5 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
     DROP TABLE IF EXISTS "payload_preferences" CASCADE;
     DROP TABLE IF EXISTS "users" CASCADE;
     DROP TABLE IF EXISTS "payload_migrations" CASCADE;
-  \`)
+  `)
 }
