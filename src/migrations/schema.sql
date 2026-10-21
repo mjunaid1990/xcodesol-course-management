@@ -18,6 +18,13 @@ CREATE TABLE IF NOT EXISTS "payload_preferences" (
   "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS "payload_kv" (
+  "id" serial PRIMARY KEY NOT NULL,
+  "key" varchar NOT NULL,
+  "data" jsonb NOT NULL
+);
+CREATE INDEX IF NOT EXISTS "payload_kv_key_idx" ON "payload_kv" ("key");
+
 -- 2. Users Collection
 CREATE TABLE IF NOT EXISTS "users" (
   "id" serial PRIMARY KEY NOT NULL,
@@ -26,6 +33,7 @@ CREATE TABLE IF NOT EXISTS "users" (
   "email" varchar NOT NULL UNIQUE,
   "reset_password_token" varchar,
   "reset_password_expiration" timestamp(3) with time zone,
+  "reset_password_requested_at" timestamp(3) with time zone,
   "salt" varchar,
   "hash" varchar,
   "login_attempts" numeric DEFAULT 0,
@@ -36,6 +44,16 @@ CREATE TABLE IF NOT EXISTS "users" (
 
 CREATE INDEX IF NOT EXISTS "users_email_idx" ON "users" ("email");
 CREATE INDEX IF NOT EXISTS "users_created_at_idx" ON "users" ("created_at");
+
+CREATE TABLE IF NOT EXISTS "users_sessions" (
+  "_order" integer NOT NULL,
+  "_parent_id" integer NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+  "id" varchar PRIMARY KEY NOT NULL,
+  "created_at" timestamp(3) with time zone DEFAULT now(),
+  "expires_at" timestamp(3) with time zone NOT NULL
+);
+CREATE INDEX IF NOT EXISTS "users_sessions_parent_idx" ON "users_sessions" ("_parent_id");
+CREATE INDEX IF NOT EXISTS "users_sessions_order_idx" ON "users_sessions" ("_order");
 
 CREATE TABLE IF NOT EXISTS "payload_preferences_rels" (
   "id" serial PRIMARY KEY NOT NULL,

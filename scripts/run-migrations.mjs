@@ -4,11 +4,11 @@ import { resolve } from 'node:path'
 import crypto from 'node:crypto'
 
 function generatePayloadHash(password) {
-  const salt = crypto.randomBytes(16).toString('hex')
+  const salt = crypto.randomBytes(32).toString('hex')
   const iterations = 600000
   const keyLength = 32
   const hashBuffer = crypto.pbkdf2Sync(password, salt, iterations, keyLength, 'sha256')
-  const hash = `pbkdf2-sha256-v1:${iterations}:${keyLength}:${hashBuffer.toString('hex')}`
+  const hash = `pbkdf2-sha256-v1:${hashBuffer.toString('hex')}`
   return { salt, hash }
 }
 
@@ -59,7 +59,72 @@ async function runMigrations() {
       console.log(`[migrations] Migration "${schemaMigration}" already applied.`)
     }
 
-    // 3. Seed data migration
+    // 3. Auth, sessions, and system tables patch (idempotent)
+    console.log('[migrations] Ensuring auth, sessions, and system tables exist...')
+    await sql`
+      ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "reset_password_requested_at" timestamp(3) with time zone;
+    `
+    await sql`
+      CREATE TABLE IF NOT EXISTS "users_sessions" (
+        "_order" integer NOT NULL,
+        "_parent_id" integer NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+        "id" varchar PRIMARY KEY NOT NULL,
+        "created_at" timestamp(3) with time zone DEFAULT now(),
+        "expires_at" timestamp(3) with time zone NOT NULL
+      );
+    `
+    await sql`
+      CREATE INDEX IF NOT EXISTS "users_sessions_parent_idx" ON "users_sessions" ("_parent_id");
+    `
+    await sql`
+      CREATE INDEX IF NOT EXISTS "users_sessions_order_idx" ON "users_sessions" ("_order");
+    `
+    await sql`
+      CREATE TABLE IF NOT EXISTS "payload_kv" (
+        "id" serial PRIMARY KEY NOT NULL,
+        "key" varchar NOT NULL,
+        "data" jsonb NOT NULL
+      );
+    `
+    await sql`
+      CREATE INDEX IF NOT EXISTS "payload_kv_key_idx" ON "payload_kv" ("key");
+    `
+
+    const authSessionsMigration = '20261021_000000_auth_sessions'
+    const authSessionsApplied = await sql`
+      SELECT "id" FROM "payload_migrations" WHERE "name" = ${authSessionsMigration} LIMIT 1;
+    `
+    if (authSessionsApplied.length === 0) {
+      await sql`
+        INSERT INTO "payload_migrations" ("name", "batch", "updated_at", "created_at")
+        VALUES (${authSessionsMigration}, 2, now(), now());
+      `
+      console.log(`[migrations] Migration "${authSessionsMigration}" recorded successfully.`)
+    }
+
+    // 4. Ensure admin and editor credentials are fully synced with valid password hashes
+    const adminEmail = (process.env.SEED_ADMIN_EMAIL || 'admin@example.com').toLowerCase()
+    const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'Admin123456!'
+    const editorEmail = (process.env.SEED_EDITOR_EMAIL || 'editor@example.com').toLowerCase()
+    const editorPassword = process.env.SEED_EDITOR_PASSWORD || 'Editor123456!'
+
+    const adminAuth = generatePayloadHash(adminPassword)
+    const editorAuth = generatePayloadHash(editorPassword)
+
+    await sql`
+      INSERT INTO "users" ("name", "email", "role", "salt", "hash", "updated_at", "created_at")
+      VALUES 
+        ('Course Administrator', ${adminEmail}, 'admin', ${adminAuth.salt}, ${adminAuth.hash}, now(), now()),
+        ('Course Editor', ${editorEmail}, 'editor', ${editorAuth.salt}, ${editorAuth.hash}, now(), now())
+      ON CONFLICT ("email") DO UPDATE SET
+        "salt" = EXCLUDED."salt",
+        "hash" = EXCLUDED."hash",
+        "role" = EXCLUDED."role",
+        "updated_at" = now();
+    `
+    console.log(`[migrations] Verified admin (${adminEmail}) and editor (${editorEmail}) credentials.`)
+
+    // 5. Seed data migration
     const seedMigration = '20261020_000001_seed_data'
     const seedApplied = await sql`
       SELECT "id" FROM "payload_migrations" WHERE "name" = ${seedMigration} LIMIT 1;
