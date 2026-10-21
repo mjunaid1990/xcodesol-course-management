@@ -26,6 +26,9 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+import { headers } from 'next/headers'
+import { HeaderAuth } from '@/components/HeaderAuth'
+
 export default async function FrontendLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   let menu: Array<{ label: string; url: string }> = [
     { label: 'Courses', url: '/courses' },
@@ -33,8 +36,19 @@ export default async function FrontendLayout({ children }: Readonly<{ children: 
     { label: 'Journal', url: '/blog' },
   ]
   let announcement: { enabled?: boolean; text?: string; link?: string } | null = null
+  let currentUser: { id?: string | number; name?: string | null; email?: string; role?: string } | null = null
+
   try {
     const payload = await getPayloadClient()
+    const { user } = await payload.auth({ headers: await headers() })
+    if (user) {
+      currentUser = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      }
+    }
     const settings = await payload.findGlobal({ slug: 'site-settings' }) as unknown as { seo?: unknown; siteName?: string; navigation?: unknown; announcement?: unknown }
     if (Array.isArray(settings.navigation) && settings.navigation.length) {
       menu = settings.navigation as Array<{ label: string; url: string }>
@@ -56,7 +70,7 @@ export default async function FrontendLayout({ children }: Readonly<{ children: 
           <nav className="site-navigation" aria-label="Main navigation">
             {menu.map((item) => <a href={item.url} key={`${item.label}-${item.url}`}>{item.label}</a>)}
           </nav>
-          <a className="header-action" href="/login">Student sign in <span aria-hidden="true">↗</span></a>
+          <HeaderAuth user={currentUser} />
         </header>
         {children}
         <footer className="site-footer"><a className="brand" href="/">fieldnotes</a><span>Thoughtful learning, for the long run.</span><span>© 2025 Fieldnotes</span></footer>

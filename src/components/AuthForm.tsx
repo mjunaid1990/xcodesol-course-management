@@ -34,7 +34,8 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
       if (!response.ok) throw new Error(mode === 'register' ? 'Account created. Please sign in.' : 'Email or password was not recognized.')
       const { user } = await response.json()
       const next = new URLSearchParams(window.location.search).get('next')
-      router.push(user?.role === 'student' ? (next?.startsWith('/') ? next : '/dashboard') : '/admin')
+      const target = next?.startsWith('/') ? next : (user?.role === 'student' ? '/dashboard' : '/admin')
+      router.push(target)
       router.refresh()
     } catch (error) {
       setServerError(error instanceof Error ? error.message : 'Something went wrong. Please try again.')

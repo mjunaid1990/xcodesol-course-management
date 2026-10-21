@@ -31,8 +31,21 @@ if (process.env.VERCEL && !storageConfigured) {
 }
 
 export default buildConfig({
-  debug: true,
-  admin: { user: Users.slug },
+  admin: {
+    user: Users.slug,
+    meta: {
+      titleSuffix: '— Fieldnotes Studio',
+    },
+    components: {
+      graphics: {
+        Logo: '@/components/admin/AdminLogo#AdminLogo',
+        Icon: '@/components/admin/AdminIcon#AdminIcon',
+      },
+      beforeDashboard: [
+        '@/components/admin/DashboardOverview#DashboardOverview',
+      ],
+    },
+  },
   upload: { limits: { fileSize: 4 * 1024 * 1024 } },
   collections: [Users, Media, Categories, Courses, Sections, Lessons, CourseResources, Enrollments, LessonProgress, Reviews, Pages, Posts, Instructors, Testimonials],
   globals: [SiteSettings],

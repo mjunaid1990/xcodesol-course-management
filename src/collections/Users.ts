@@ -5,7 +5,7 @@ export const Users: CollectionConfig = {
   auth: true,
   admin: { useAsTitle: 'email', defaultColumns: ['email', 'role', 'createdAt'] },
   access: {
-    admin: ({ req: { user } }) => user?.role === 'admin',
+    admin: ({ req: { user } }) => user?.role === 'admin' || user?.role === 'editor',
     create: ({ req: { user } }) => user?.role === 'admin' || !user,
     delete: ({ req: { user } }) => user?.role === 'admin',
     read: ({ req }) => req.user?.role === 'admin' ? true : req.user ? { id: { equals: req.user.id } } : false,
