@@ -48,17 +48,19 @@ export default async function FrontendLayout({ children }: Readonly<{ children: 
     ]
   }
   return (
-    <div className={`font-theme ${dmSans.variable} ${dmSerif.variable}`}>
-      {announcement?.enabled && announcement.text && <div className="announcement-bar">{announcement.link ? <a href={announcement.link}>{announcement.text} ↗</a> : announcement.text}</div>}
-      <header className="site-header">
-        <a className="brand" href="/" aria-label="Fieldnotes home"><span className="brand-mark">F</span> fieldnotes</a>
-        <nav className="site-navigation" aria-label="Main navigation">
-          {menu.map((item) => <a href={item.url} key={`${item.label}-${item.url}`}>{item.label}</a>)}
-        </nav>
-        <a className="header-action" href="/login">Student sign in <span aria-hidden="true">↗</span></a>
-      </header>
-      {children}
-      <footer className="site-footer"><a className="brand" href="/">fieldnotes</a><span>Thoughtful learning, for the long run.</span><span>© 2025 Fieldnotes</span></footer>
-    </div>
+    <html lang="en">
+      <body className={`font-theme ${dmSans.variable} ${dmSerif.variable}`}>
+        {announcement?.enabled && announcement.text && <div className="announcement-bar">{announcement.link ? <a href={announcement.link}>{announcement.text} ↗</a> : announcement.text}</div>}
+        <header className="site-header">
+          <a className="brand" href="/" aria-label="Fieldnotes home"><span className="brand-mark">F</span> fieldnotes</a>
+          <nav className="site-navigation" aria-label="Main navigation">
+            {menu.map((item) => <a href={item.url} key={`${item.label}-${item.url}`}>{item.label}</a>)}
+          </nav>
+          <a className="header-action" href="/login">Student sign in <span aria-hidden="true">↗</span></a>
+        </header>
+        {children}
+        <footer className="site-footer"><a className="brand" href="/">fieldnotes</a><span>Thoughtful learning, for the long run.</span><span>© 2025 Fieldnotes</span></footer>
+      </body>
+    </html>
   )
 }
