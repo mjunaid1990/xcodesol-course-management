@@ -44,6 +44,7 @@ export default buildConfig({
         Logo: '@/components/admin/AdminLogo#AdminLogo',
         Icon: '@/components/admin/AdminIcon#AdminIcon',
       },
+      Nav: '@/components/admin/AdminSidebar#AdminSidebar',
       views: {
         dashboard: {
           Component: '@/components/admin/DashboardOverview#DashboardOverview',
