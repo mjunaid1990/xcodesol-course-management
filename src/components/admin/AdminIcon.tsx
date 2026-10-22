@@ -4,20 +4,20 @@ export const AdminIcon: React.FC = () => {
   return (
     <div
       style={{
-        width: '28px',
-        height: '28px',
-        borderRadius: '7px',
-        background: 'linear-gradient(135deg, #465640 0%, #2f3a2b 100%)',
+        width: '30px',
+        height: '30px',
+        borderRadius: '9px',
+        background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)',
         color: '#ffffff',
         display: 'grid',
         placeItems: 'center',
-        fontWeight: 700,
-        fontSize: '14px',
+        fontWeight: 800,
+        fontSize: '13px',
         letterSpacing: '-0.5px',
-        boxShadow: '0 2px 6px rgba(70, 86, 64, 0.35)',
+        boxShadow: '0 3px 10px rgba(79, 70, 229, 0.35)',
       }}
     >
-      F
+      FN
     </div>
   )
 }
