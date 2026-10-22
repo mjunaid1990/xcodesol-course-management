@@ -44,9 +44,11 @@ export default buildConfig({
         Logo: '@/components/admin/AdminLogo#AdminLogo',
         Icon: '@/components/admin/AdminIcon#AdminIcon',
       },
-      beforeDashboard: [
-        '@/components/admin/DashboardOverview#DashboardOverview',
-      ],
+      views: {
+        dashboard: {
+          Component: '@/components/admin/DashboardOverview#DashboardOverview',
+        },
+      },
     },
   },
   upload: { limits: { fileSize: 4 * 1024 * 1024 } },

@@ -577,3 +577,24 @@ button[type='submit']:hover {
 .table tr:hover td {
   background: var(--mad-bg) !important;
 }
+
+/* ==========================================================================
+   7. Dashboard Layout & Suppression of Native Unstyled Modular Widgets
+   ========================================================================== */
+
+.dashboard {
+  padding-top: 16px !important;
+  padding-bottom: 48px !important;
+  max-width: 1440px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.dashboard__modular,
+.modular-dashboard,
+.dashboard__collections,
+.dashboard .droppable-widget,
+.dashboard__widgets {
+  display: none !important;
+}
+

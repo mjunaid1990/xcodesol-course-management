@@ -42,14 +42,55 @@ export const DashboardOverview: React.FC<DashboardProps> = async (props) => {
     date: string
   }> = []
 
+  const counts = {
+    courses: 0,
+    sections: 0,
+    lessons: 0,
+    courseResources: 0,
+    categories: 0,
+    users: 0,
+    enrollments: 0,
+    lessonProgress: 0,
+    reviews: 0,
+    pages: 0,
+    posts: 0,
+    instructors: 0,
+    testimonials: 0,
+    media: 0,
+  }
+
   if (payloadInstance) {
     try {
-      const [courses, users, enrollments, lessons, reviews] = await Promise.all([
+      const [
+        courses,
+        users,
+        enrollments,
+        lessons,
+        reviews,
+        sections,
+        resources,
+        categories,
+        progress,
+        pages,
+        posts,
+        instructors,
+        testimonials,
+        media,
+      ] = await Promise.all([
         payloadInstance.find({ collection: 'courses', limit: 200, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
         payloadInstance.find({ collection: 'users', limit: 500, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
         payloadInstance.find({ collection: 'enrollments', limit: 8, sort: '-createdAt', depth: 1, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
         payloadInstance.find({ collection: 'lessons', limit: 500, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
         payloadInstance.find({ collection: 'reviews', limit: 10, sort: '-createdAt', depth: 1, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
+        payloadInstance.find({ collection: 'sections', limit: 1, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
+        payloadInstance.find({ collection: 'course-resources', limit: 1, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
+        payloadInstance.find({ collection: 'categories', limit: 1, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
+        payloadInstance.find({ collection: 'lesson-progress', limit: 1, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
+        payloadInstance.find({ collection: 'pages', limit: 1, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
+        payloadInstance.find({ collection: 'posts', limit: 1, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
+        payloadInstance.find({ collection: 'instructors', limit: 1, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
+        payloadInstance.find({ collection: 'testimonials', limit: 1, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
+        payloadInstance.find({ collection: 'media', limit: 1, depth: 0, overrideAccess: true }).catch(() => ({ docs: [], totalDocs: 0 })),
       ])
 
       coursesCount = courses.totalDocs || courses.docs.length
@@ -75,6 +116,22 @@ export const DashboardOverview: React.FC<DashboardProps> = async (props) => {
 
       totalReviewsCount = reviews.totalDocs || reviews.docs.length
       pendingReviewsCount = reviews.docs.filter((r: any) => !r.approved).length
+
+      // Counts mapping for all 14 collections
+      counts.courses = coursesCount
+      counts.users = users.totalDocs || users.docs.length
+      counts.enrollments = activeEnrollmentsCount
+      counts.lessons = lessonsCount
+      counts.reviews = totalReviewsCount
+      counts.sections = sections.totalDocs || sections.docs.length
+      counts.courseResources = resources.totalDocs || resources.docs.length
+      counts.categories = categories.totalDocs || categories.docs.length
+      counts.lessonProgress = progress.totalDocs || progress.docs.length
+      counts.pages = pages.totalDocs || pages.docs.length
+      counts.posts = posts.totalDocs || posts.docs.length
+      counts.instructors = instructors.totalDocs || instructors.docs.length
+      counts.testimonials = testimonials.totalDocs || testimonials.docs.length
+      counts.media = media.totalDocs || media.docs.length
     } catch (e) {
       console.error('[DashboardOverview] Error loading overview metrics:', e)
     }
@@ -94,6 +151,7 @@ export const DashboardOverview: React.FC<DashboardProps> = async (props) => {
     totalReviewsCount,
     pendingReviewsCount,
     recentEnrollments,
+    counts,
   }
 
   return <DashboardClient data={dashboardData} />
