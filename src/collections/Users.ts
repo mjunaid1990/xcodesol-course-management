@@ -2,7 +2,10 @@ import type { CollectionConfig } from 'payload'
 
 export const Users: CollectionConfig = {
   slug: 'users',
-  auth: true,
+  auth: {
+    maxLoginAttempts: 0, // Disable lockouts so failed attempts never lock the account
+    tokenExpiration: 7 * 24 * 60 * 60, // 7 days session
+  },
   admin: { useAsTitle: 'email', defaultColumns: ['email', 'role', 'createdAt'] },
   access: {
     admin: ({ req: { user } }) => user?.role === 'admin' || user?.role === 'editor',

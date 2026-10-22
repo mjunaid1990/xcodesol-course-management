@@ -20,10 +20,11 @@ async function runMigrations() {
   }
 
   console.log('[migrations] Connecting to database...')
+  const isLocal = databaseUrl.includes('localhost') || databaseUrl.includes('127.0.0.1')
   const sql = postgres(databaseUrl, {
     max: 1,
     connect_timeout: 15,
-    ssl: databaseUrl.includes('supabase') || databaseUrl.includes('sslmode=require') ? 'require' : undefined,
+    ssl: !isLocal ? 'require' : undefined,
   })
 
   try {
@@ -102,27 +103,46 @@ async function runMigrations() {
       console.log(`[migrations] Migration "${authSessionsMigration}" recorded successfully.`)
     }
 
-    // 4. Ensure admin and editor credentials are fully synced with valid password hashes
-    const adminEmail = (process.env.SEED_ADMIN_EMAIL || 'admin@example.com').toLowerCase()
+    // 4. Ensure admin and editor credentials are fully synced with valid password hashes and reset lockouts
+    const adminEmail = (process.env.SEED_ADMIN_EMAIL || 'admin@example.com').toLowerCase().trim()
     const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'Admin123456!'
-    const editorEmail = (process.env.SEED_EDITOR_EMAIL || 'editor@example.com').toLowerCase()
+    const editorEmail = (process.env.SEED_EDITOR_EMAIL || 'editor@example.com').toLowerCase().trim()
     const editorPassword = process.env.SEED_EDITOR_PASSWORD || 'Editor123456!'
 
     const adminAuth = generatePayloadHash(adminPassword)
     const editorAuth = generatePayloadHash(editorPassword)
 
     await sql`
-      INSERT INTO "users" ("name", "email", "role", "salt", "hash", "updated_at", "created_at")
+      INSERT INTO "users" ("name", "email", "role", "salt", "hash", "updated_at", "created_at", "login_attempts", "lock_until")
       VALUES 
-        ('Course Administrator', ${adminEmail}, 'admin', ${adminAuth.salt}, ${adminAuth.hash}, now(), now()),
-        ('Course Editor', ${editorEmail}, 'editor', ${editorAuth.salt}, ${editorAuth.hash}, now(), now())
+        ('Course Administrator', ${adminEmail}, 'admin', ${adminAuth.salt}, ${adminAuth.hash}, now(), now(), 0, NULL),
+        ('Course Editor', ${editorEmail}, 'editor', ${editorAuth.salt}, ${editorAuth.hash}, now(), now(), 0, NULL)
       ON CONFLICT ("email") DO UPDATE SET
         "salt" = EXCLUDED."salt",
         "hash" = EXCLUDED."hash",
         "role" = EXCLUDED."role",
+        "login_attempts" = 0,
+        "lock_until" = NULL,
         "updated_at" = now();
     `
-    console.log(`[migrations] Verified admin (${adminEmail}) and editor (${editorEmail}) credentials.`)
+    await sql`
+      UPDATE "users" 
+      SET "login_attempts" = 0, "lock_until" = NULL 
+      WHERE "role" IN ('admin', 'editor') OR "email" IN (${adminEmail}, ${editorEmail});
+    `
+    console.log(`[migrations] Verified admin (${adminEmail}) and editor (${editorEmail}) credentials and reset lockouts.`)
+
+    const unlockMigration = '20261022_000000_unlock_and_sync_admin'
+    const unlockApplied = await sql`
+      SELECT "id" FROM "payload_migrations" WHERE "name" = ${unlockMigration} LIMIT 1;
+    `
+    if (unlockApplied.length === 0) {
+      await sql`
+        INSERT INTO "payload_migrations" ("name", "batch", "updated_at", "created_at")
+        VALUES (${unlockMigration}, 3, now(), now());
+      `
+      console.log(`[migrations] Migration "${unlockMigration}" recorded successfully.`)
+    }
 
     // 5. Seed data migration
     const seedMigration = '20261020_000001_seed_data'

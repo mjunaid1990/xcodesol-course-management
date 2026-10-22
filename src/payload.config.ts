@@ -33,6 +33,9 @@ if (process.env.VERCEL && !storageConfigured) {
 export default buildConfig({
   admin: {
     user: Users.slug,
+    routes: {
+      login: '/login',
+    },
     meta: {
       titleSuffix: '— Fieldnotes Studio',
     },
@@ -75,5 +78,53 @@ export default buildConfig({
   })] : [],
   onInit: async (payload) => {
     if (!process.env.PAYLOAD_SECRET) payload.logger.warn('PAYLOAD_SECRET is using fallback. Configure it in Vercel environment variables.')
+
+    try {
+      const adminEmail = (process.env.SEED_ADMIN_EMAIL || 'admin@example.com').toLowerCase().trim()
+      const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'Admin123456!'
+
+      const existingUsers = await payload.find({
+        collection: 'users',
+        where: { email: { equals: adminEmail } },
+        showHiddenFields: true,
+        overrideAccess: true,
+        limit: 1,
+      })
+
+      if (existingUsers.docs.length === 0) {
+        await payload.create({
+          collection: 'users',
+          data: {
+            name: 'Course Administrator',
+            email: adminEmail,
+            password: adminPassword,
+            role: 'admin',
+          },
+          overrideAccess: true,
+        })
+        payload.logger.info(`[auth] Initialized admin account (${adminEmail})`)
+      } else {
+        const adminDoc = existingUsers.docs[0] as any
+        const isCorruptedHash = !adminDoc.hash || (typeof adminDoc.hash === 'string' && adminDoc.hash.includes(':600000:32:')) || !adminDoc.salt
+        const isLocked = Boolean(adminDoc.lockUntil) || Boolean(adminDoc.loginAttempts && adminDoc.loginAttempts > 0)
+
+        if (isCorruptedHash || isLocked) {
+          await payload.update({
+            collection: 'users',
+            id: adminDoc.id,
+            data: {
+              password: adminPassword,
+              role: 'admin',
+              loginAttempts: 0,
+              lockUntil: null,
+            },
+            overrideAccess: true,
+          })
+          payload.logger.info(`[auth] Auto-healed credentials & unlocked admin account (${adminEmail})`)
+        }
+      }
+    } catch (e: any) {
+      payload.logger.warn(`[auth] onInit admin sync: ${e?.message || e}`)
+    }
   },
 })

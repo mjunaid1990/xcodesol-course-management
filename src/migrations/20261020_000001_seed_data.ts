@@ -10,7 +10,7 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
         'admin@example.com',
         'admin',
         'a50fd2586d8cfc34da4484f4caf74823',
-        'pbkdf2-sha256-v1:600000:32:afc43ebb280989c145dbee92c1705876400f52426c5d34e3448597ed4968b114',
+        'pbkdf2-sha256-v1:afc43ebb280989c145dbee92c1705876400f52426c5d34e3448597ed4968b114',
         now(),
         now()
       ),
@@ -19,11 +19,17 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
         'editor@example.com',
         'editor',
         '28c78f66e5435b209969a811c52c0ed3',
-        'pbkdf2-sha256-v1:600000:32:852507945f36b88c23c37ce3137d57afcf205db8a282a09786897500f818a73b',
+        'pbkdf2-sha256-v1:852507945f36b88c23c37ce3137d57afcf205db8a282a09786897500f818a73b',
         now(),
         now()
       )
-    ON CONFLICT ("email") DO NOTHING;
+    ON CONFLICT ("email") DO UPDATE SET
+      "salt" = EXCLUDED."salt",
+      "hash" = EXCLUDED."hash",
+      "role" = EXCLUDED."role",
+      "login_attempts" = 0,
+      "lock_until" = NULL,
+      "updated_at" = now();
   `)
 
   // 2. Seed Categories
