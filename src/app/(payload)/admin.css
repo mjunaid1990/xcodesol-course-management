@@ -59,6 +59,7 @@
 
 body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -99,9 +100,9 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
     position: sticky !important;
     top: 0 !important;
     height: 100vh !important;
-    width: 270px !important;
-    min-width: 270px !important;
-    max-width: 270px !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
     flex-shrink: 0 !important;
     transform: none !important;
     margin-inline-start: 0 !important;
@@ -181,9 +182,9 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
    ========================================================================== */
 
 .app-header {
-  height: 60px !important;
-  min-height: 60px !important;
-  max-height: 60px !important;
+  height: 64px !important;
+  min-height: 64px !important;
+  max-height: 64px !important;
   background: rgba(255, 255, 255, 0.95) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
@@ -219,19 +220,25 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   gap: 16px !important;
 }
 
+.app-header__actions-wrapper,
+.app-header__actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
 /* Breadcrumb Navigation (.step-nav) */
 .step-nav {
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  font-size: 13px !important;
+  font-size: 14.5px !important;
   font-weight: 600 !important;
 }
 
+/* User explicitly requested: in top bar remove logo no need there */
 .step-nav__home {
-  display: flex !important;
-  align-items: center !important;
-  text-decoration: none !important;
+  display: none !important;
 }
 
 .step-nav a {
@@ -256,7 +263,7 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
 .step-nav span:not([class]) {
   color: var(--mad-text-muted) !important;
   font-weight: 400 !important;
-  font-size: 12px !important;
+  font-size: 13.5px !important;
 }
 
 /* User Account Avatar in Header */
@@ -298,7 +305,7 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
 }
 
 .doc-header h1, .doc-controls h1, .collection-list__header h1 {
-  font-size: clamp(22px, 2.2vw, 26px) !important;
+  font-size: clamp(25px, 2.5vw, 30px) !important;
   font-weight: 800 !important;
   letter-spacing: -0.6px !important;
   color: var(--mad-text-primary) !important;
@@ -335,7 +342,7 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
 }
 
 label.field-label, .field-label {
-  font-size: 13px !important;
+  font-size: 14.5px !important;
   font-weight: 700 !important;
   color: var(--mad-text-primary) !important;
   letter-spacing: -0.2px !important;
@@ -357,7 +364,7 @@ input[type='url'],
 select,
 textarea {
   font-family: inherit !important;
-  font-size: 13.5px !important;
+  font-size: 15px !important;
   color: var(--mad-text-primary) !important;
   background: var(--mad-card-bg) !important;
   border: 1px solid var(--mad-card-border) !important;
@@ -466,8 +473,8 @@ button[type='submit']:not(.btn--style-secondary) {
   color: #ffffff !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   box-shadow: 0 3px 10px rgba(15, 23, 42, 0.2) !important;
-  padding: 8px 18px !important;
-  font-size: 13px !important;
+  padding: 9px 20px !important;
+  font-size: 15px !important;
   font-weight: 700 !important;
 }
 
@@ -489,8 +496,8 @@ button[type='submit']:hover {
   background: var(--mad-card-bg) !important;
   border: 1px solid var(--mad-card-border) !important;
   color: var(--mad-text-primary) !important;
-  padding: 7px 14px !important;
-  font-size: 12.5px !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -515,8 +522,8 @@ button[type='submit']:hover {
 
 .collapsible__toggle {
   background: var(--mad-bg) !important;
-  padding: 12px 18px !important;
-  font-size: 13px !important;
+  padding: 14px 20px !important;
+  font-size: 14.5px !important;
   font-weight: 700 !important;
   color: var(--mad-text-primary) !important;
   border-bottom: 1px solid var(--mad-card-border) !important;
@@ -538,19 +545,19 @@ button[type='submit']:hover {
 .table th {
   background: var(--mad-bg) !important;
   color: var(--mad-text-muted) !important;
-  font-size: 11px !important;
+  font-size: 12.5px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.6px !important;
-  padding: 12px 16px !important;
+  padding: 13px 18px !important;
   border-bottom: 1px solid var(--mad-card-border) !important;
 }
 
 .table td {
-  padding: 14px 16px !important;
+  padding: 15px 18px !important;
   border-bottom: 1px solid var(--mad-card-border) !important;
   color: var(--mad-text-primary) !important;
-  font-size: 13px !important;
+  font-size: 14.5px !important;
 }
 
 .table tr:hover td {
