@@ -118,8 +118,6 @@ async function runMigrations() {
         ('Course Administrator', ${adminEmail}, 'admin', ${adminAuth.salt}, ${adminAuth.hash}, now(), now(), 0, NULL),
         ('Course Editor', ${editorEmail}, 'editor', ${editorAuth.salt}, ${editorAuth.hash}, now(), now(), 0, NULL)
       ON CONFLICT ("email") DO UPDATE SET
-        "salt" = EXCLUDED."salt",
-        "hash" = EXCLUDED."hash",
         "role" = EXCLUDED."role",
         "login_attempts" = 0,
         "lock_until" = NULL,

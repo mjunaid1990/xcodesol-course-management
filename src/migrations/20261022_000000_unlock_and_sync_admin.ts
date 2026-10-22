@@ -26,8 +26,6 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
       ('Course Administrator', ${adminEmail}, 'admin', ${adminAuth.salt}, ${adminAuth.hash}, 0, NULL, now(), now()),
       ('Course Editor', ${editorEmail}, 'editor', ${editorAuth.salt}, ${editorAuth.hash}, 0, NULL, now(), now())
     ON CONFLICT ("email") DO UPDATE SET
-      "salt" = EXCLUDED."salt",
-      "hash" = EXCLUDED."hash",
       "role" = EXCLUDED."role",
       "login_attempts" = 0,
       "lock_until" = NULL,
