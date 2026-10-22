@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   Global Theme Tokens & Fonts
+   Global Theme Tokens & Typography
    ========================================================================== */
 
 :root {
@@ -64,83 +64,107 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
 }
 
 /* ==========================================================================
-   Skeleton Shimmer Animations ("Skeletor Animations")
+   1. Modern Application Shell & Layout (.template-default & .nav)
    ========================================================================== */
 
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+/* The main layout container */
+.template-default {
+  display: flex !important;
+  flex-direction: row !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  background: var(--mad-bg) !important;
+  position: relative !important;
+  overflow-x: hidden !important;
 }
 
-.shimmer-effect {
-  background: linear-gradient(
-    90deg,
-    rgba(226, 232, 240, 0.6) 0%,
-    rgba(241, 245, 249, 1) 50%,
-    rgba(226, 232, 240, 0.6) 100%
-  ) !important;
-  background-size: 200% 100% !important;
-  animation: skeleton-shimmer 1.6s infinite linear !important;
-  border-radius: 8px;
-  display: inline-block;
-}
-
-[data-theme='dark'] .shimmer-effect {
-  background: linear-gradient(
-    90deg,
-    rgba(31, 41, 55, 0.6) 0%,
-    rgba(55, 65, 81, 0.8) 50%,
-    rgba(31, 41, 55, 0.6) 100%
-  ) !important;
-  background-size: 200% 100% !important;
-}
-
-@keyframes pulse-dot {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
-  }
-  50% {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-  }
-}
-
-.pulse-animation {
-  animation: pulse-dot 2s infinite ease-in-out;
-}
-
-/* ==========================================================================
-   1. Modern Navigation Sidebar (.nav & .custom-admin-sidebar)
-   ========================================================================== */
-
-.nav {
-  background: var(--mad-card-bg) !important;
-  border-right: 1px solid var(--mad-card-border) !important;
-  width: 260px !important;
-  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.02) !important;
-}
-
-.custom-admin-sidebar {
-  width: 260px !important;
-  min-width: 260px !important;
-  max-width: 260px !important;
-  height: 100vh !important;
-  position: sticky !important;
-  top: 0 !important;
-  background: var(--mad-card-bg) !important;
-  border-right: 1px solid var(--mad-card-border) !important;
-  padding: 0 !important;
+/* Content wrapper (Right column containing topbar + page) */
+.template-default__wrap {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: space-between !important;
-  z-index: 30 !important;
+  background: var(--mad-bg) !important;
+  min-height: 100vh !important;
 }
 
+/* Desktop layout (>= 1024px): Sidebar is permanently docked and visible */
+@media (min-width: 1024px) {
+  .nav,
+  .template-default .nav,
+  aside.custom-admin-sidebar {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: sticky !important;
+    top: 0 !important;
+    height: 100vh !important;
+    width: 270px !important;
+    min-width: 270px !important;
+    max-width: 270px !important;
+    flex-shrink: 0 !important;
+    transform: none !important;
+    margin-inline-start: 0 !important;
+    margin-left: 0 !important;
+    z-index: 40 !important;
+    background: #ffffff !important;
+    border-right: 1px solid var(--mad-card-border) !important;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.02) !important;
+  }
+
+  [data-theme='dark'] .nav,
+  [data-theme='dark'] .template-default .nav,
+  [data-theme='dark'] aside.custom-admin-sidebar {
+    background: #090d16 !important;
+    border-right: 1px solid var(--mad-card-border) !important;
+  }
+
+  /* Hide Payload's default floating toggle arrow on desktop */
+  .template-default__nav-toggler-wrapper,
+  .template-default__nav-toggler-container {
+    display: none !important;
+  }
+}
+
+/* Mobile & Tablet layout (< 1024px): Sidebar operates as an off-canvas drawer */
+@media (max-width: 1023px) {
+  .nav,
+  .template-default .nav,
+  aside.custom-admin-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    z-index: 50 !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .template-default__nav-toggler-wrapper {
+    position: fixed !important;
+    top: 14px !important;
+    left: 14px !important;
+    z-index: 45 !important;
+  }
+
+  .template-default__nav-toggler {
+    background: #ffffff !important;
+    border: 1px solid var(--mad-card-border) !important;
+    border-radius: 8px !important;
+    padding: 6px 10px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    cursor: pointer !important;
+  }
+
+  [data-theme='dark'] .template-default__nav-toggler {
+    background: #111827 !important;
+    border-color: #374151 !important;
+  }
+}
+
+/* Smooth custom sidebar scrollbar */
 .custom-sidebar-scroll::-webkit-scrollbar {
   width: 4px;
 }
@@ -152,53 +176,50 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   background: #374151;
 }
 
-.template-default {
-  display: flex !important;
-  min-height: 100vh !important;
-  background: var(--mad-bg) !important;
-}
-
-.template-default__wrap {
-  flex: 1 1 0% !important;
-  min-width: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  background: var(--mad-bg) !important;
-}
-
 /* ==========================================================================
-   2. Modern App Header (.app-header)
+   2. Modern Application Header & Topbar (.app-header)
    ========================================================================== */
 
 .app-header {
-  background: rgba(255, 255, 255, 0.9) !important;
+  height: 60px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
   border-bottom: 1px solid var(--mad-card-border) !important;
-  height: 58px !important;
+  padding: 0 24px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  padding: 0 24px !important;
   position: sticky !important;
   top: 0 !important;
-  z-index: 25 !important;
+  z-index: 30 !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
 }
 
 [data-theme='dark'] .app-header {
-  background: rgba(9, 13, 22, 0.9) !important;
+  background: rgba(9, 13, 22, 0.95) !important;
   border-bottom: 1px solid var(--mad-card-border) !important;
 }
 
-.app-header__wrapper,
+.app-header__wrapper {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  gap: 16px !important;
+}
+
 .app-header__controls-wrapper {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   width: 100% !important;
+  gap: 16px !important;
 }
 
-
+/* Breadcrumb Navigation (.step-nav) */
 .step-nav {
   display: flex !important;
   align-items: center !important;
@@ -207,17 +228,24 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   font-weight: 600 !important;
 }
 
+.step-nav__home {
+  display: flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
+}
+
 .step-nav a {
   color: var(--mad-text-secondary) !important;
   text-decoration: none !important;
   padding: 4px 8px !important;
   border-radius: 6px !important;
   transition: all 0.15s ease !important;
+  font-weight: 600 !important;
 }
 
 .step-nav a:hover {
-  background: var(--mad-bg) !important;
-  color: var(--mad-text-primary) !important;
+  background: rgba(99, 102, 241, 0.08) !important;
+  color: var(--mad-indigo) !important;
 }
 
 .step-nav span {
@@ -225,17 +253,30 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   font-weight: 700 !important;
 }
 
+.step-nav span:not([class]) {
+  color: var(--mad-text-muted) !important;
+  font-weight: 400 !important;
+  font-size: 12px !important;
+}
+
+/* User Account Avatar in Header */
 .app-header__account {
-  width: 32px !important;
-  height: 32px !important;
+  width: 34px !important;
+  height: 34px !important;
   border-radius: 50% !important;
   border: 2px solid var(--mad-card-border) !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  background: var(--mad-card-bg) !important;
 }
 
 .app-header__account:hover {
   border-color: var(--mad-indigo) !important;
-  transform: scale(1.05) !important;
+  transform: scale(1.06) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
 }
 
 /* ==========================================================================
@@ -243,21 +284,21 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
    ========================================================================== */
 
 .doc-controls {
-  background: rgba(255, 255, 255, 0.88) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
   backdrop-filter: blur(16px) !important;
   border-bottom: 1px solid var(--mad-card-border) !important;
-  padding: 12px 24px !important;
+  padding: 14px 28px !important;
   position: sticky !important;
-  top: 0 !important;
-  z-index: 10 !important;
+  top: 60px !important;
+  z-index: 20 !important;
 }
 
 [data-theme='dark'] .doc-controls {
-  background: rgba(17, 24, 39, 0.88) !important;
+  background: rgba(17, 24, 39, 0.9) !important;
 }
 
 .doc-header h1, .doc-controls h1, .collection-list__header h1 {
-  font-size: clamp(22px, 2.5vw, 28px) !important;
+  font-size: clamp(22px, 2.2vw, 26px) !important;
   font-weight: 800 !important;
   letter-spacing: -0.6px !important;
   color: var(--mad-text-primary) !important;
@@ -270,8 +311,8 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
 
 .collection-edit__main, .global-edit__main {
   max-width: 1200px !important;
-  margin: 20px auto 40px auto !important;
-  padding: 0 16px !important;
+  margin: 24px auto 48px auto !important;
+  padding: 0 20px !important;
 }
 
 .render-fields {
@@ -284,8 +325,8 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   background: var(--mad-card-bg) !important;
   border: 1px solid var(--mad-card-border) !important;
   border-radius: 12px !important;
-  padding: 20px 24px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  padding: 22px 26px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
   transition: border-color 0.15s ease !important;
 }
 
@@ -340,7 +381,7 @@ textarea:focus {
   outline: none !important;
 }
 
-/* File Upload Dropzone */
+/* Upload Dropzone */
 .upload, .dropzone, .upload__dropzoneAndUpload {
   border: 2px dashed var(--mad-card-border) !important;
   border-radius: 12px !important;
@@ -355,21 +396,7 @@ textarea:focus {
   background: rgba(99, 102, 241, 0.03) !important;
 }
 
-.upload__dropzoneContent {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 16px !important;
-  flex-wrap: wrap !important;
-}
-
-.upload__dragAndDropText, .upload__dropzoneContent__orText {
-  color: var(--mad-text-muted) !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-}
-
-/* Modern iOS / Linear-Style Toggle Switch for Checkboxes */
+/* Modern iOS / Linear-Style Switch for Checkboxes */
 .checkbox-input {
   display: inline-flex !important;
   align-items: center !important;
@@ -419,7 +446,7 @@ textarea:focus {
 }
 
 /* ==========================================================================
-   5. Button Hierarchy & Polish (.btn)
+   5. Button Polish (.btn)
    ========================================================================== */
 
 .btn {
@@ -433,7 +460,6 @@ textarea:focus {
   cursor: pointer !important;
 }
 
-/* Primary Button (Save, Publish, Create) */
 .btn--style-primary,
 button[type='submit']:not(.btn--style-secondary) {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
@@ -458,7 +484,6 @@ button[type='submit']:hover {
   filter: brightness(1.1) !important;
 }
 
-/* Secondary Button (Edit, API, Choose Existing) */
 .btn--style-secondary,
 .btn--style-subtle {
   background: var(--mad-card-bg) !important;
@@ -533,13 +558,13 @@ button[type='submit']:hover {
 }
 
 /* ==========================================================================
-   7. Dashboard Layout & Suppression of Native Unstyled Modular Widgets
+   7. Dashboard Canvas & Native Modular Widgets Suppression
    ========================================================================== */
 
 .dashboard {
-  padding-top: 16px !important;
-  padding-bottom: 48px !important;
-  max-width: 1440px !important;
+  padding: 16px 24px 48px 24px !important;
+  width: 100% !important;
+  max-width: 1560px !important;
   margin-left: auto !important;
   margin-right: auto !important;
 }
@@ -551,4 +576,3 @@ button[type='submit']:hover {
 .dashboard__widgets {
   display: none !important;
 }
-
