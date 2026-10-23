@@ -266,9 +266,19 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   font-weight: 600 !important;
 }
 
-/* User explicitly requested: in top bar remove logo no need there */
+/* Root Dashboard Breadcrumb Item */
 .step-nav__home {
-  display: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  border-radius: 8px !important;
+  padding: 4px 6px !important;
+  transition: all 0.15s ease !important;
+}
+
+.step-nav__home:hover {
+  background: rgba(99, 102, 241, 0.08) !important;
 }
 
 .step-nav a {
@@ -324,17 +334,26 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
    ========================================================================== */
 
 .doc-controls {
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
   border-bottom: 1px solid var(--mad-card-border) !important;
-  padding: 14px 28px !important;
+  padding: 0 32px !important;
   position: sticky !important;
-  top: 60px !important;
+  top: 64px !important;
   z-index: 20 !important;
 }
 
 [data-theme='dark'] .doc-controls {
-  background: rgba(17, 24, 39, 0.9) !important;
+  background: rgba(17, 24, 39, 0.95) !important;
+}
+
+.doc-controls__wrapper {
+  max-width: 1320px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
 .doc-header h1, .doc-controls h1, .collection-list__header h1 {
@@ -748,4 +767,111 @@ button[type='submit']:hover {
 .dashboard .droppable-widget,
 .dashboard__widgets {
   display: none !important;
+}
+
+/* ==========================================================================
+   8. Polished Shimmer, Skeleton Loaders & Toast Notifications
+   ========================================================================== */
+
+/* Shimmer & Skeleton Loaders */
+.shimmer-effect,
+.collection-list__shimmer,
+.shimmer-effect__shine {
+  border-radius: 10px !important;
+}
+
+.shimmer-effect {
+  position: relative !important;
+  overflow: hidden !important;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%) !important;
+  background-size: 200% 100% !important;
+  animation: payload-shimmer 1.8s ease-in-out infinite !important;
+}
+
+[data-theme='dark'] .shimmer-effect {
+  background: linear-gradient(90deg, #111827 0%, #1f2937 50%, #111827 100%) !important;
+  background-size: 200% 100% !important;
+}
+
+@keyframes payload-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.shimmer-effect__shine {
+  opacity: 0.8 !important;
+}
+
+/* Modern Sonner Toast Notifications for CRUD Feedback */
+.payload-toast-container {
+  z-index: 99999 !important;
+}
+
+.payload-toast-item {
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-radius: 14px !important;
+  padding: 14px 18px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid var(--mad-card-border) !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme='dark'] .payload-toast-item {
+  background: rgba(17, 24, 39, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #f8fafc !important;
+}
+
+.payload-toast-item.toast-success {
+  border-color: #a7f3d0 !important;
+  background: #f0fdf4 !important;
+  color: #14532d !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15) !important;
+}
+
+[data-theme='dark'] .payload-toast-item.toast-success {
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  background: #064e3b !important;
+  color: #ecfdf5 !important;
+}
+
+.payload-toast-item.toast-error {
+  border-color: #fecdd3 !important;
+  background: #fff1f2 !important;
+  color: #881337 !important;
+  box-shadow: 0 8px 24px rgba(244, 63, 94, 0.15) !important;
+}
+
+[data-theme='dark'] .payload-toast-item.toast-error {
+  border-color: rgba(244, 63, 94, 0.35) !important;
+  background: #4c0519 !important;
+  color: #fff1f2 !important;
+}
+
+.payload-toast-close-button {
+  background: transparent !important;
+  border: none !important;
+  color: inherit !important;
+  opacity: 0.6 !important;
+  cursor: pointer !important;
+  transition: opacity 0.15s ease !important;
+  border-radius: 6px !important;
+  padding: 4px !important;
+}
+
+.payload-toast-close-button:hover {
+  opacity: 1 !important;
+  background: rgba(0, 0, 0, 0.05) !important;
 }
