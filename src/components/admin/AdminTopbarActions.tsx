@@ -88,11 +88,11 @@ export function AdminTopbarActions() {
   ]
 
   return (
-    <div className="flex items-center gap-3 select-none">
+    <div className="flex items-center gap-2.5 sm:gap-3.5 select-none mr-1 sm:mr-2">
       {/* 1. Global Search Bar */}
       <div className="relative" ref={searchRef}>
         <div className="relative flex items-center">
-          <Search className="w-4 h-4 absolute left-3 text-slate-400 pointer-events-none" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none z-10" />
           <input
             type="text"
             value={searchQuery}
@@ -102,9 +102,10 @@ export function AdminTopbarActions() {
             }}
             onFocus={() => setSearchOpen(true)}
             placeholder="Search curriculum, students, lessons..."
-            className="w-56 sm:w-72 md:w-80 pl-9 pr-12 py-2 text-[14.5px] bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-2xs"
+            style={{ paddingLeft: '40px', paddingRight: '48px' }}
+            className="w-40 xs:w-48 sm:w-56 md:w-64 lg:w-72 py-2 text-[13.5px] sm:text-[14px] bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-2xs"
           />
-          <kbd className="hidden sm:inline-flex items-center gap-0.5 absolute right-2.5 px-1.5 py-0.5 text-[10px] font-bold text-slate-400 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded shadow-xs pointer-events-none">
+          <kbd className="hidden sm:inline-flex items-center gap-0.5 absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-bold text-slate-400 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded shadow-xs pointer-events-none z-10">
             ⌘K
           </kbd>
         </div>

@@ -388,13 +388,13 @@ export function DashboardClient({ data }: { data: DashboardData }) {
   }, [collectionsList])
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-4 px-3 sm:px-6 space-y-7 font-sans">
+    <div className="w-full max-w-7xl mx-auto py-6 sm:py-8 px-4 sm:px-8 space-y-9 font-sans">
       {/* 1. Executive Hero Banner (Cleaned up, no dev noise or duplicate links) */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white p-6 sm:p-8 shadow-lg border border-slate-800/80">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white p-7 sm:p-9 shadow-lg border border-slate-800/80">
         <div className="absolute right-0 top-0 -mt-12 -mr-12 w-96 h-96 bg-gradient-to-br from-indigo-500/20 via-sky-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2.5 max-w-2xl">
+          <div className="space-y-3 max-w-2xl">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -414,29 +414,29 @@ export function DashboardClient({ data }: { data: DashboardData }) {
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 flex-wrap self-start md:self-auto">
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3.5 border border-white/10 text-center min-w-[105px]">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 text-center min-w-[115px]">
               <span className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
                 Curriculum
               </span>
-              <span className="text-xl font-extrabold text-white mt-0.5 block">
+              <span className="text-xl font-extrabold text-white mt-1 block">
                 {data.coursesCount} Courses
               </span>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3.5 border border-white/10 text-center min-w-[105px]">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 text-center min-w-[115px]">
               <span className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
                 Video Stream
               </span>
-              <span className="text-xl font-extrabold text-emerald-400 mt-0.5 block">
+              <span className="text-xl font-extrabold text-emerald-400 mt-1 block">
                 100% Ready
               </span>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3.5 border border-white/10 text-center min-w-[105px]">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 text-center min-w-[115px]">
               <span className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
                 Moderation
               </span>
-              <span className="text-xl font-extrabold text-cyan-300 mt-0.5 block">
+              <span className="text-xl font-extrabold text-cyan-300 mt-1 block">
                 {data.pendingReviewsCount > 0 ? `${data.pendingReviewsCount} Pending` : 'Clean Queue'}
               </span>
             </div>
@@ -445,38 +445,40 @@ export function DashboardClient({ data }: { data: DashboardData }) {
       </div>
 
       {/* 2. Primary KPI Metrics Row (4 Cards, scaled fonts +15%) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
         {/* Card 1: Courses */}
         <Link
           href="/admin/collections/courses"
-          className="group relative p-5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-800 transition-all"
+          className="group relative p-6 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-800 transition-all flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between mb-3.5">
-            <div className="w-11 h-11 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-              <BookOpen className="w-5 h-5" />
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-2xs">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <span className="text-[12px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                {data.publishedCourses} Live
+              </span>
             </div>
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
-              {data.publishedCourses} Live
-            </span>
-          </div>
 
-          <h3 className="text-[12.5px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-1">
-            Total Courses
-          </h3>
+            <h3 className="text-[13px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-1.5">
+              Total Courses
+            </h3>
 
-          <div className="flex items-baseline gap-2 mb-2.5">
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              {data.coursesCount}
-            </span>
-          </div>
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                {data.coursesCount}
+              </span>
+            </div>
 
-          <div className="w-full bg-slate-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden mb-2.5">
-            <div
-              className="bg-indigo-600 h-full rounded-full transition-all duration-500"
-              style={{
-                width: data.coursesCount > 0 ? `${Math.round((data.publishedCourses / data.coursesCount) * 100)}%` : '0%',
-              }}
-            />
+            <div className="w-full bg-slate-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden mb-3.5">
+              <div
+                className="bg-indigo-600 h-full rounded-full transition-all duration-500"
+                style={{
+                  width: data.coursesCount > 0 ? `${Math.round((data.publishedCourses / data.coursesCount) * 100)}%` : '0%',
+                }}
+              />
+            </div>
           </div>
 
           <p className="text-[13.5px] font-medium text-slate-500 dark:text-slate-400 flex items-center justify-between">
@@ -589,17 +591,17 @@ export function DashboardClient({ data }: { data: DashboardData }) {
       </div>
 
       {/* 3. Quick Dispatch Shortcuts Toolbar */}
-      <div className="p-4 sm:p-5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+      <div className="p-5 sm:p-6 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h4 className="text-[13.5px] font-extrabold uppercase tracking-wider text-slate-900 dark:text-white">
+          <h4 className="text-[14px] font-extrabold uppercase tracking-wider text-slate-900 dark:text-white">
             Quick Dispatch
           </h4>
-          <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span className="text-[12.5px] font-medium text-slate-500 dark:text-slate-400">
             Direct Creation Shortcuts
           </span>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2.5 flex-wrap">
           <Link
             href="/admin/collections/courses/create"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-zinc-800/80 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-[13px] font-bold text-slate-700 dark:text-slate-200 transition-all hover:scale-[1.02]"
@@ -659,10 +661,10 @@ export function DashboardClient({ data }: { data: DashboardData }) {
       </div>
 
       {/* 4. Core Operational Two-Column Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-7">
         {/* Left Column: Enrollments & Student Stream (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="p-5 sm:p-6 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs">
+          <div className="p-6 sm:p-7 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
               <div className="flex items-center gap-2.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 animate-pulse" />
@@ -738,7 +740,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
 
         {/* Right Column: Platform Health & Cloud Infrastructure (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="p-5 sm:p-6 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs space-y-4">
+          <div className="p-6 sm:p-7 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-zinc-800">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
@@ -888,13 +890,14 @@ export function DashboardClient({ data }: { data: DashboardData }) {
 
           {/* Search filter */}
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none z-10" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter collections..."
-              className="w-full pl-9 pr-8 py-2 text-sm bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-2xs transition-colors"
+              style={{ paddingLeft: '38px', paddingRight: '32px' }}
+              className="w-full py-2 text-sm bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-2xs transition-colors"
             />
             {searchQuery && (
               <button
@@ -977,7 +980,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
         </div>
 
         {/* Collections Grid Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
           {filteredCollections.map((col) => {
             const IconComponent = col.icon
             const count = col.countKey ? data.counts[col.countKey] : undefined
@@ -985,7 +988,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
             return (
               <div
                 key={col.slug}
-                className="group relative p-4.5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs hover:shadow-md hover:border-slate-300 dark:hover:border-zinc-700 transition-all flex flex-col justify-between"
+                className="group relative p-5 sm:p-6 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs hover:shadow-md hover:border-slate-300 dark:hover:border-zinc-700 transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3.5">
