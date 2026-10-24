@@ -62,6 +62,9 @@ export default buildConfig({
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL || '' },
     migrationDir: './src/migrations',
+    // Existing production migrations and draft tables use Payload's legacy
+    // `_versions` suffix. Keep runtime queries aligned with that schema.
+    versionsSuffix: '_versions',
   }),
   plugins: storageConfigured ? [s3Storage({
     enabled: true,
