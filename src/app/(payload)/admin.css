@@ -743,6 +743,12 @@ button[type='submit']:hover {
   line-height: 1.6 !important;
 }
 
+/* The shared list header already owns the create action. Avoid repeating it
+   inside the empty-state panel when a collection has no rows yet. */
+.collection-list .no-results .btn {
+  display: none !important;
+}
+
 .collection-edit,
 .global-edit,
 .document-edit {
@@ -839,6 +845,98 @@ button[type='submit']:hover {
   background: #f0fdf4 !important;
   color: #14532d !important;
   box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Shared collection CRUD header and create action. Payload uses these classes
+   for every collection list, so actions stay consistent across the admin. */
+.list-header__content {
+  width: 100% !important;
+}
+
+.list-header__title-and-actions {
+  width: 100% !important;
+  min-width: 0 !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+
+.list-header__title {
+  margin: 0 !important;
+  color: var(--mad-text-primary) !important;
+  font-size: clamp(24px, 2.2vw, 30px) !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.15 !important;
+}
+
+.list-header__title-actions {
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 0 0 auto !important;
+}
+
+.list-create-new-doc__create-new-button {
+  min-height: 42px !important;
+  padding: 0 17px !important;
+  border: 1px solid #4338ca !important;
+  border-radius: 11px !important;
+  background: #4f46e5 !important;
+  color: #fff !important;
+  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.2) !important;
+  font-size: 14px !important;
+  font-weight: 650 !important;
+  letter-spacing: 0 !important;
+  text-decoration: none !important;
+  transition: background-color 140ms ease, box-shadow 140ms ease, transform 140ms ease !important;
+}
+
+.list-create-new-doc__create-new-button:hover {
+  background: #4338ca !important;
+  box-shadow: 0 7px 18px rgba(79, 70, 229, 0.26) !important;
+  transform: translateY(-1px);
+}
+
+.list-create-new-doc__create-new-button:focus-visible {
+  outline: 3px solid rgba(99, 102, 241, 0.35) !important;
+  outline-offset: 2px !important;
+}
+
+/* Keep loading placeholders calm and static instead of shimmering. */
+.shimmer-effect,
+.collection-list__shimmer {
+  animation: none !important;
+  background: #eef2f7 !important;
+  background-image: none !important;
+}
+
+.shimmer-effect__shine {
+  display: none !important;
+  animation: none !important;
+}
+
+[data-theme='dark'] .shimmer-effect,
+[data-theme='dark'] .collection-list__shimmer {
+  background: #202938 !important;
+  background-image: none !important;
+}
+
+@media (max-width: 640px) {
+  .list-header__content {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .list-header__title-and-actions {
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .list-create-new-doc__create-new-button {
+    min-height: 40px !important;
+    padding: 0 13px !important;
+    font-size: 13px !important;
+  }
 }
 
 [data-theme='dark'] .payload-toast-item.toast-success {
