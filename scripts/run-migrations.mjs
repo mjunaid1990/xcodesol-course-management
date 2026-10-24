@@ -114,9 +114,12 @@ async function runMigrations() {
         "_uuid" varchar,
         "item" varchar NOT NULL
       );
+    `
+    await sql`
       CREATE INDEX IF NOT EXISTS "_courses_versions_version_learning_outcomes_parent_idx"
-        ON "_courses_versions_version_learning_outcomes" ("_parent_id");
-
+      ON "_courses_versions_version_learning_outcomes" ("_parent_id");
+    `
+    await sql`
       CREATE TABLE IF NOT EXISTS "_courses_versions_version_requirements" (
         "_order" integer NOT NULL,
         "_parent_id" integer NOT NULL REFERENCES "_courses_versions"("id") ON DELETE CASCADE,
@@ -124,9 +127,12 @@ async function runMigrations() {
         "_uuid" varchar,
         "item" varchar NOT NULL
       );
+    `
+    await sql`
       CREATE INDEX IF NOT EXISTS "_courses_versions_version_requirements_parent_idx"
-        ON "_courses_versions_version_requirements" ("_parent_id");
-
+      ON "_courses_versions_version_requirements" ("_parent_id");
+    `
+    await sql`
       CREATE TABLE IF NOT EXISTS "_courses_versions_version_faqs" (
         "_order" integer NOT NULL,
         "_parent_id" integer NOT NULL REFERENCES "_courses_versions"("id") ON DELETE CASCADE,
@@ -135,8 +141,10 @@ async function runMigrations() {
         "question" varchar NOT NULL,
         "answer" varchar NOT NULL
       );
+    `
+    await sql`
       CREATE INDEX IF NOT EXISTS "_courses_versions_version_faqs_parent_idx"
-        ON "_courses_versions_version_faqs" ("_parent_id");
+      ON "_courses_versions_version_faqs" ("_parent_id");
     `
     const courseVersionsMigration = '20261024_000000_courses_version_arrays'
     await sql`
