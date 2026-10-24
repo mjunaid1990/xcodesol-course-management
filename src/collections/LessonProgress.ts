@@ -38,7 +38,7 @@ const verifyLessonAccess: CollectionBeforeChangeHook = async ({ data, operation,
 export const LessonProgress: CollectionConfig = {
   slug: 'lesson-progress',
   indexes: [{ fields: ['user', 'lesson'], unique: true }],
-  admin: { useAsTitle: 'id', defaultColumns: ['user', 'lesson', 'completed', 'updatedAt'] },
+  admin: { useAsTitle: 'lesson', defaultColumns: ['user', 'lesson', 'completed', 'updatedAt'] },
   access: {
     read: ({ req }) => req.user?.role === 'admin' ? true : req.user ? { user: { equals: req.user.id } } : false,
     create: ({ req }) => req.user?.role === 'student' || isStaff(req.user),

@@ -207,6 +207,7 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
 .app-header__content {
   padding: 0 !important;
   width: 100% !important;
+  height: 100% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
@@ -217,6 +218,7 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   align-items: center !important;
   justify-content: space-between !important;
   width: 100% !important;
+  height: 100% !important;
   gap: 20px !important;
 }
 
@@ -225,6 +227,7 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   align-items: center !important;
   justify-content: space-between !important;
   width: 100% !important;
+  height: 100% !important;
   gap: 20px !important;
   min-width: 0 !important;
 }
@@ -233,6 +236,7 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
   display: flex !important;
   align-items: center !important;
   min-width: 0 !important;
+  height: 100% !important;
   flex: 1 1 auto !important;
 }
 
@@ -333,82 +337,170 @@ body, button, input, select, textarea, .nav, .app-header, .doc-controls, .btn {
    3. Document Header & Controls (.doc-controls)
    ========================================================================== */
 
+/* ==========================================================================
+   3. Document Header & Controls (.doc-controls)
+   ========================================================================== */
+
 .doc-controls {
-  background: rgba(255, 255, 255, 0.95) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
   border-bottom: 1px solid var(--mad-card-border) !important;
-  padding: 0 32px !important;
+  padding: 12px 32px !important;
   position: sticky !important;
   top: 64px !important;
-  z-index: 20 !important;
+  z-index: 25 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02) !important;
 }
 
 [data-theme='dark'] .doc-controls {
-  background: rgba(17, 24, 39, 0.95) !important;
+  background: rgba(17, 24, 39, 0.96) !important;
+  border-bottom: 1px solid var(--mad-card-border) !important;
 }
 
 .doc-controls__wrapper {
-  max-width: 1320px !important;
+  max-width: 1080px !important;
   margin: 0 auto !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
+  width: 100% !important;
+  gap: 16px !important;
 }
 
-.doc-header h1, .doc-controls h1, .collection-list__header h1 {
-  font-size: clamp(25px, 2.5vw, 30px) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.6px !important;
+.doc-controls__content {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  font-size: 17px !important;
+  font-weight: 750 !important;
   color: var(--mad-text-primary) !important;
-  margin: 0 !important;
+  letter-spacing: -0.02em !important;
+  min-width: 0 !important;
+}
+
+.doc-controls__title,
+.doc-controls__value {
+  font-size: 17px !important;
+  font-weight: 750 !important;
+  color: var(--mad-text-primary) !important;
+  letter-spacing: -0.02em !important;
+}
+
+.doc-controls .btn--style-primary,
+.doc-controls button[type='submit'],
+.collection-edit button[type='submit'] {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #4338ca !important;
+  border-radius: 9px !important;
+  font-weight: 700 !important;
+  font-size: 13.5px !important;
+  padding: 8px 22px !important;
+  box-shadow: 0 3px 12px rgba(79, 70, 229, 0.28) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  letter-spacing: 0.01em !important;
+}
+
+.doc-controls .btn--style-primary:hover,
+.doc-controls button[type='submit']:hover,
+.collection-edit button[type='submit']:hover {
+  background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%) !important;
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4) !important;
+  transform: translateY(-1px) !important;
 }
 
 /* ==========================================================================
-   4. Form Elements, Inputs & Card Containers
+   4. Modern Form Container, Inputs, ReactSelect & Validation
    ========================================================================== */
 
-.collection-edit__main, .global-edit__main {
-  max-width: 1200px !important;
-  margin: 24px auto 48px auto !important;
-  padding: 0 20px !important;
+.collection-edit,
+.global-edit,
+.document-edit {
+  max-width: 1160px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 24px 32px 64px 32px !important;
+  width: 100% !important;
+}
+
+.collection-edit__main,
+.global-edit__main {
+  max-width: 1040px !important;
+  margin: 16px auto 48px auto !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+/* Unified Main Form Card Surface */
+.collection-edit__form,
+.document-fields,
+.global-edit__form {
+  background: var(--mad-card-bg) !important;
+  border: 1px solid var(--mad-card-border) !important;
+  border-radius: 18px !important;
+  padding: 32px 36px !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02) !important;
+  transition: border-color 0.15s ease !important;
+}
+
+[data-theme='dark'] .collection-edit__form,
+[data-theme='dark'] .document-fields,
+[data-theme='dark'] .global-edit__form {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
 .render-fields {
   display: flex !important;
   flex-direction: column !important;
-  gap: 20px !important;
+  gap: 22px !important;
 }
 
-.render-fields > .field-type {
-  background: var(--mad-card-bg) !important;
-  border: 1px solid var(--mad-card-border) !important;
-  border-radius: 12px !important;
-  padding: 22px 26px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
-  transition: border-color 0.15s ease !important;
+/* Individual inputs sit seamlessly within the unified card without ugly separate borders */
+.render-fields > .field-type:not(.join):not(.array-field):not(.blocks-field):not(.collapsible):not(.tabs-field):not(.group-field) {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  margin-bottom: 0 !important;
 }
 
-.render-fields > .field-type:hover {
-  border-color: var(--mad-card-border-hover) !important;
-}
-
-label.field-label, .field-label {
-  font-size: 14.5px !important;
-  font-weight: 700 !important;
+/* Field Labels */
+label.field-label,
+.field-label {
+  font-size: 13.5px !important;
+  font-weight: 650 !important;
   color: var(--mad-text-primary) !important;
-  letter-spacing: -0.2px !important;
-  margin-bottom: 8px !important;
-  display: block !important;
+  letter-spacing: -0.01em !important;
+  margin-bottom: 7px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
 }
 
-label.field-label .required, .field-label .required {
-  color: #ef4444 !important;
-  margin-left: 4px !important;
+label.field-label .required,
+.field-label .required {
+  color: #f43f5e !important;
+  margin-left: 2px !important;
   font-weight: 800 !important;
+  font-size: 15px !important;
 }
 
-/* Document Form Fields */
+/* Field Descriptions / Helper Text */
+.field-description,
+.field-type .field-description {
+  font-size: 12.5px !important;
+  color: var(--mad-text-muted) !important;
+  margin-top: 6px !important;
+  line-height: 1.45 !important;
+  font-weight: 450 !important;
+}
+
+/* Standard Inputs: Text, Number, Password, Email, Select, Textarea */
 .render-fields input[type='text'],
 .render-fields input[type='email'],
 .render-fields input[type='password'],
@@ -424,16 +516,35 @@ label.field-label .required, .field-label .required {
 .field-type select,
 .field-type textarea {
   font-family: inherit !important;
-  font-size: 15px !important;
+  font-size: 14.5px !important;
+  font-weight: 500 !important;
   color: var(--mad-text-primary) !important;
-  background: var(--mad-card-bg) !important;
-  border: 1px solid var(--mad-card-border) !important;
-  border-radius: 8px !important;
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 10px !important;
   padding: 10px 14px !important;
+  min-height: 44px !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
-  transition: all 0.15s ease !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.render-fields textarea,
+.field-type textarea {
+  min-height: 110px !important;
+  line-height: 1.5 !important;
+  padding: 12px 14px !important;
+}
+
+.render-fields input:hover,
+.render-fields select:hover,
+.render-fields textarea:hover,
+.field-type input:hover,
+.field-type select:hover,
+.field-type textarea:hover {
+  border-color: #94a3b8 !important;
+  background: #ffffff !important;
 }
 
 .render-fields input:focus,
@@ -442,9 +553,398 @@ label.field-label .required, .field-label .required {
 .field-type input:focus,
 .field-type select:focus,
 .field-type textarea:focus {
-  border-color: var(--mad-indigo) !important;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.16) !important;
+  border-color: #6366f1 !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18), 0 1px 2px rgba(15, 23, 42, 0.05) !important;
   outline: none !important;
+}
+
+[data-theme='dark'] .render-fields input[type='text'],
+[data-theme='dark'] .render-fields input[type='email'],
+[data-theme='dark'] .render-fields input[type='password'],
+[data-theme='dark'] .render-fields input[type='number'],
+[data-theme='dark'] .render-fields input[type='url'],
+[data-theme='dark'] .render-fields select,
+[data-theme='dark'] .render-fields textarea,
+[data-theme='dark'] .field-type input,
+[data-theme='dark'] .field-type select,
+[data-theme='dark'] .field-type textarea {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme='dark'] .render-fields input:focus,
+[data-theme='dark'] .render-fields select:focus,
+[data-theme='dark'] .render-fields textarea:focus,
+[data-theme='dark'] .field-type input:focus,
+[data-theme='dark'] .field-type select:focus,
+[data-theme='dark'] .field-type textarea:focus {
+  background: #1e293b !important;
+  border-color: #818cf8 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.28) !important;
+}
+
+/* ==========================================================================
+   4A. Modern Relationship Fields & ReactSelect Dropdown Polish
+   ========================================================================== */
+
+.field-type.relationship {
+  position: relative !important;
+}
+
+.relationship__wrap {
+  display: flex !important;
+  width: 100% !important;
+  align-items: stretch !important;
+  position: relative !important;
+}
+
+.relationship__wrap div.react-select {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.rs__control {
+  min-height: 44px !important;
+  height: 44px !important;
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.rs__control:hover {
+  border-color: #94a3b8 !important;
+  background: #ffffff !important;
+}
+
+.rs__control--is-focused {
+  border-color: #6366f1 !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18), 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+  outline: none !important;
+}
+
+.relationship--allow-create .rs__control {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-right: none !important;
+}
+
+.rs__value-container {
+  padding: 2px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  overflow: visible !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+.rs__placeholder {
+  color: #94a3b8 !important;
+  font-size: 14px !important;
+  font-weight: 450 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rs__single-value {
+  color: var(--mad-text-primary) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rs__input-container {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--mad-text-primary) !important;
+}
+
+.rs__indicators {
+  padding: 0 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.rs__indicator-separator {
+  display: none !important;
+}
+
+.rs__indicator {
+  color: #94a3b8 !important;
+  padding: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: color 0.15s ease !important;
+}
+
+.rs__indicator:hover {
+  color: var(--mad-indigo) !important;
+}
+
+/* Add New Relation '+' Button */
+button.relationship-add-new__add-button {
+  min-width: 44px !important;
+  width: 44px !important;
+  height: 44px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-top-right-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  color: #475569 !important;
+  transition: all 0.15s ease !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+}
+
+button.relationship-add-new__add-button:hover {
+  background: #e0e7ff !important;
+  border-color: #a5b4fc !important;
+  color: #4338ca !important;
+}
+
+/* ReactSelect Dropdown Menu & Options */
+.rs__menu {
+  border-radius: 12px !important;
+  border: 1px solid var(--mad-card-border) !important;
+  background: var(--mad-card-bg) !important;
+  box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.04) !important;
+  padding: 6px !important;
+  z-index: 9999 !important;
+  margin-top: 6px !important;
+  overflow: hidden !important;
+}
+
+.rs__menu-list {
+  padding: 0 !important;
+  max-height: 240px !important;
+}
+
+.rs__option {
+  border-radius: 8px !important;
+  padding: 9px 12px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.12s ease !important;
+  color: var(--mad-text-primary) !important;
+}
+
+.rs__option:hover,
+.rs__option--is-focused {
+  background: #eef2ff !important;
+  color: #4338ca !important;
+}
+
+.rs__option--is-selected {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+  font-weight: 650 !important;
+}
+
+[data-theme='dark'] .rs__control {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+[data-theme='dark'] .rs__control:hover {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+[data-theme='dark'] .rs__control--is-focused {
+  background: #1e293b !important;
+  border-color: #818cf8 !important;
+}
+
+[data-theme='dark'] button.relationship-add-new__add-button {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme='dark'] button.relationship-add-new__add-button:hover {
+  background: #312e81 !important;
+  border-color: #6366f1 !important;
+  color: #c7d2fe !important;
+}
+
+[data-theme='dark'] .rs__menu {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+}
+
+[data-theme='dark'] .rs__option:hover,
+[data-theme='dark'] .rs__option--is-focused {
+  background: rgba(99, 102, 241, 0.18) !important;
+  color: #c7d2fe !important;
+}
+
+/* ==========================================================================
+   4B. PROPER VALIDATION FEEDBACK & ERROR STATES (High Priority)
+   ========================================================================== */
+
+/* Error Shake Animation */
+@keyframes payload-error-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+/* Highlight invalid fields boldly in red with subtle tint & glow */
+.field-type.error input,
+.field-type.error select,
+.field-type.error textarea,
+.field-type.error .rs__control {
+  border-color: #f43f5e !important;
+  background-color: #fff1f2 !important;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.18), 0 1px 2px rgba(244, 63, 94, 0.06) !important;
+  color: #9f1239 !important;
+  animation: payload-error-shake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both !important;
+}
+
+.field-type.error .field-label,
+.field-type.error label.field-label {
+  color: #e11d48 !important;
+}
+
+.field-type.error button.relationship-add-new__add-button {
+  border-color: #f43f5e !important;
+  background-color: #ffe4e6 !important;
+  color: #be123c !important;
+}
+
+/* Clean, modern inline error message pill beneath the invalid input */
+.field-error,
+.field-type.error .field-error,
+.field-type .field-error.tooltip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: 7px !important;
+  padding: 5px 12px !important;
+  background: #ffe4e6 !important;
+  border: 1px solid #fecdd3 !important;
+  border-radius: 8px !important;
+  color: #be123c !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  position: static !important;
+  transform: none !important;
+  box-shadow: 0 1px 3px rgba(244, 63, 94, 0.08) !important;
+  max-width: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.field-error::before,
+.field-type.error .field-error::before {
+  content: '' !important;
+  display: inline-block !important;
+  width: 14px !important;
+  height: 14px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23be123c'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z' clip-rule='evenodd'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  flex-shrink: 0 !important;
+}
+
+.field-error::after {
+  display: none !important;
+}
+
+/* Dark mode error states */
+[data-theme='dark'] .field-type.error input,
+[data-theme='dark'] .field-type.error select,
+[data-theme='dark'] .field-type.error textarea,
+[data-theme='dark'] .field-type.error .rs__control {
+  border-color: #f43f5e !important;
+  background-color: rgba(244, 63, 94, 0.12) !important;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25) !important;
+  color: #fecdd3 !important;
+}
+
+[data-theme='dark'] .field-type.error .field-label,
+[data-theme='dark'] .field-type.error label.field-label {
+  color: #fb7185 !important;
+}
+
+[data-theme='dark'] .field-error,
+[data-theme='dark'] .field-type.error .field-error,
+[data-theme='dark'] .field-type .field-error.tooltip {
+  background: rgba(244, 63, 94, 0.18) !important;
+  border-color: rgba(244, 63, 94, 0.35) !important;
+  color: #fda4af !important;
+}
+
+[data-theme='dark'] .field-error::before,
+[data-theme='dark'] .field-type.error .field-error::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23fda4af'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z' clip-rule='evenodd'/%3E%3C/svg%3E") !important;
+}
+
+/* ==========================================================================
+   4C. Sub-Collections, Join Fields & Embedded Lists (e.g. Lessons)
+   ========================================================================== */
+
+.field-type.join,
+.field-type.array-field,
+.field-type.blocks-field {
+  background: #f8fafc !important;
+  border: 1px solid var(--mad-card-border) !important;
+  border-radius: 14px !important;
+  padding: 24px 28px !important;
+  margin-top: 18px !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+}
+
+[data-theme='dark'] .field-type.join,
+[data-theme='dark'] .field-type.array-field,
+[data-theme='dark'] .field-type.blocks-field {
+  background: #0d1322 !important;
+  border-color: #1f2937 !important;
+}
+
+.field-type.join .field-label,
+.field-type.array-field > .field-label {
+  font-size: 15px !important;
+  font-weight: 750 !important;
+  color: var(--mad-text-primary) !important;
+  letter-spacing: -0.01em !important;
+  margin-bottom: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid var(--mad-card-border) !important;
+}
+
+.field-type.join .table {
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  border: 1px solid var(--mad-card-border) !important;
+  background: #ffffff !important;
+}
+
+[data-theme='dark'] .field-type.join .table {
+  background: #111827 !important;
 }
 
 /* Search Bar in Collection Lists & Views (Prevents icon and text overriding each other) */
@@ -1029,6 +1529,47 @@ button[type='submit']:hover {
 .collection-list .table table {
   border-collapse: separate !important;
   border-spacing: 0 !important;
+  counter-reset: collection-row;
+}
+
+/* Use a page-local row number in place of Payload's raw ID column. */
+.collection-list .table thead tr::before,
+.collection-list .table tbody tr::before {
+  display: table-cell !important;
+  width: 54px !important;
+  min-width: 54px !important;
+  padding: 13px 12px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  color: #94a3b8 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  font-size: 12px !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.collection-list .table thead tr::before {
+  content: '#' !important;
+  background: #f8fafc !important;
+  font-weight: 700 !important;
+}
+
+.collection-list .table tbody tr {
+  counter-increment: collection-row;
+}
+
+.collection-list .table tbody tr::before {
+  content: counter(collection-row) !important;
+  background: #fff !important;
+}
+
+.collection-list .table thead th#heading-id,
+.collection-list .table tbody td.cell-id {
+  display: none !important;
+}
+
+/* The index replaces ID everywhere, including saved column preferences. */
+.collection-list .pill-selector__pill#id {
+  display: none !important;
 }
 
 .collection-list .table thead th {
@@ -1067,6 +1608,18 @@ button[type='submit']:hover {
 [data-theme='dark'] .collection-list .table thead th {
   background: #1f2937 !important;
   color: #aebbd0 !important;
+}
+
+[data-theme='dark'] .collection-list .table thead tr::before {
+  border-color: #30394a !important;
+  background: #1f2937 !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme='dark'] .collection-list .table tbody tr::before {
+  border-color: #30394a !important;
+  background: #111827 !important;
+  color: #94a3b8 !important;
 }
 
 /* Keep loading placeholders calm and static instead of shimmering. */

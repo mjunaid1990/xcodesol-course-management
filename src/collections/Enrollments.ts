@@ -3,7 +3,7 @@ import type { CollectionConfig } from 'payload'
 export const Enrollments: CollectionConfig = {
   slug: 'enrollments',
   indexes: [{ fields: ['user', 'course'], unique: true }],
-  admin: { useAsTitle: 'id', defaultColumns: ['user', 'course', 'status', 'source', 'createdAt'] },
+  admin: { useAsTitle: 'course', defaultColumns: ['user', 'course', 'status', 'source', 'createdAt'] },
   access: {
     read: ({ req }) => req.user?.role === 'admin' ? true : req.user ? { user: { equals: req.user.id } } : false,
     create: ({ req }) => req.user?.role === 'admin',
