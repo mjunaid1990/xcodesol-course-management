@@ -103,6 +103,51 @@ async function runMigrations() {
       console.log(`[migrations] Migration "${authSessionsMigration}" recorded successfully.`)
     }
 
+    // 3b. Current Payload versioned array tables for courses (idempotent).
+    // The initial schema contains the older `_courses_versions_*` names;
+    // Payload 3.91 expects the versioned field prefix in these table names.
+    await sql`
+      CREATE TABLE IF NOT EXISTS "_courses_versions_version_learning_outcomes" (
+        "_order" integer NOT NULL,
+        "_parent_id" integer NOT NULL REFERENCES "_courses_versions"("id") ON DELETE CASCADE,
+        "id" serial PRIMARY KEY NOT NULL,
+        "_uuid" varchar,
+        "item" varchar NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS "_courses_versions_version_learning_outcomes_parent_idx"
+        ON "_courses_versions_version_learning_outcomes" ("_parent_id");
+
+      CREATE TABLE IF NOT EXISTS "_courses_versions_version_requirements" (
+        "_order" integer NOT NULL,
+        "_parent_id" integer NOT NULL REFERENCES "_courses_versions"("id") ON DELETE CASCADE,
+        "id" serial PRIMARY KEY NOT NULL,
+        "_uuid" varchar,
+        "item" varchar NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS "_courses_versions_version_requirements_parent_idx"
+        ON "_courses_versions_version_requirements" ("_parent_id");
+
+      CREATE TABLE IF NOT EXISTS "_courses_versions_version_faqs" (
+        "_order" integer NOT NULL,
+        "_parent_id" integer NOT NULL REFERENCES "_courses_versions"("id") ON DELETE CASCADE,
+        "id" serial PRIMARY KEY NOT NULL,
+        "_uuid" varchar,
+        "question" varchar NOT NULL,
+        "answer" varchar NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS "_courses_versions_version_faqs_parent_idx"
+        ON "_courses_versions_version_faqs" ("_parent_id");
+    `
+    const courseVersionsMigration = '20261024_000000_courses_version_arrays'
+    await sql`
+      INSERT INTO "payload_migrations" ("name", "batch", "updated_at", "created_at")
+      SELECT ${courseVersionsMigration}, 4, now(), now()
+      WHERE NOT EXISTS (
+        SELECT 1 FROM "payload_migrations" WHERE "name" = ${courseVersionsMigration}
+      );
+    `
+    console.log(`[migrations] Ensured versioned course array tables and recorded "${courseVersionsMigration}".`)
+
     // 4. Ensure admin and editor credentials are fully synced with valid password hashes and reset lockouts
     const adminEmail = (process.env.SEED_ADMIN_EMAIL || 'admin@example.com').toLowerCase().trim()
     const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'Admin123456!'

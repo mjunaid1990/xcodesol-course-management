@@ -9,7 +9,7 @@
     "lint": "next lint",
     "payload": "payload",
     "generate:types": "payload generate:types",
-    "migrate": "node scripts/run-migrations.mjs && cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "migrate": "node scripts/run-migrations.mjs",
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
     "migrate:check": "node scripts/check-migrations.mjs",
