@@ -726,27 +726,76 @@ button[type='submit']:hover {
 }
 
 .collection-list .no-results {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  min-height: 250px !important;
   background: var(--mad-card-bg) !important;
-  border: 1px dashed var(--mad-card-border) !important;
-  border-radius: 18px !important;
-  padding: 56px 24px !important;
+  border: 1px solid var(--mad-card-border) !important;
+  border-radius: 20px !important;
+  padding: 44px 24px !important;
   text-align: center !important;
   margin-top: 24px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.045) !important;
+}
+
+.collection-list .no-results::before {
+  content: '';
+  display: block;
+  width: 54px;
+  height: 54px;
+  margin: 0 0 18px;
+  border: 1px solid #e0e7ff;
+  border-radius: 17px;
+  background-color: #eef2ff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10.8' cy='10.8' r='6.8'/%3E%3Cpath d='m16 16 4 4M8.5 10.8h4.6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.08);
 }
 
 .collection-list .no-results p {
   color: var(--mad-text-secondary) !important;
   font-size: 15px !important;
   max-width: 480px !important;
-  margin: 12px auto 24px auto !important;
+  margin: 8px auto 0 !important;
   line-height: 1.6 !important;
+}
+
+.collection-list .no-results h3 {
+  color: var(--mad-text-primary) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  margin: 0 !important;
 }
 
 /* The shared list header already owns the create action. Avoid repeating it
    inside the empty-state panel when a collection has no rows yet. */
 .collection-list .no-results .btn {
   display: none !important;
+}
+
+.collection-list .no-results__actions {
+  display: none !important;
+}
+
+[data-theme='dark'] .collection-list .no-results::before {
+  background-color: #222647;
+  border-color: #383d6b;
+}
+
+@media (max-width: 640px) {
+  .collection-list .no-results {
+    min-height: 210px !important;
+    padding: 32px 20px !important;
+  }
+
+  .collection-list .no-results p {
+    font-size: 14px !important;
+  }
 }
 
 .collection-edit,
