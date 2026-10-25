@@ -7,6 +7,7 @@ import { formatDate } from '@/lib/utils'
 import { Modal } from '@/components/ui/Modal'
 import { FormField, Input, Select, Button } from '@/components/ui/FormField'
 import { showToast } from '@/lib/toast'
+import { ListRowSkeleton } from '@/components/ui/Skeleton'
 import { enrollStudentAction } from '@/app/actions/admin-actions'
 
 interface Props {
@@ -105,12 +106,15 @@ export function StudentsManagerClient({ initialStudents, courses }: Props) {
         </div>
       </div>
 
-      {/* Students Table */}
-      <div className="overflow-hidden rounded-2xl border border-slate-800 bg-[#0e1424] shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-slate-800 bg-slate-900/40 text-slate-400">
+      {/* Students Table / Skeleton */}
+      {isPending ? (
+        <ListRowSkeleton count={5} />
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-white/[0.07] bg-[#0c0e17]/85 luxury-card shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-white/[0.07] bg-slate-900/40 text-slate-400">
                 <th className="py-3.5 px-4 font-semibold">Student</th>
                 <th className="py-3.5 px-4 font-semibold">Role</th>
                 <th className="py-3.5 px-4 font-semibold">Enrolled Courses</th>
@@ -155,9 +159,10 @@ export function StudentsManagerClient({ initialStudents, courses }: Props) {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Manual Enroll Modal */}
       <Modal

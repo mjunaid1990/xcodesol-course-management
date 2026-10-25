@@ -27,6 +27,7 @@ import { formatCurrency, formatDuration } from '@/lib/utils'
 import { showToast } from '@/lib/toast'
 import { Modal } from '@/components/ui/Modal'
 import { FormField, Input, Textarea, Select, Button } from '@/components/ui/FormField'
+import { LessonItemSkeleton } from '@/components/ui/Skeleton'
 import {
   updateCourseAction,
   createSectionAction,
@@ -441,8 +442,11 @@ export function CourseEditorClient({ initialCourse, initialSections }: CourseEdi
                   {/* Lessons List in Module */}
                   {isExpanded && (
                     <div className="p-4 space-y-2.5">
+                      {isPending && targetSectionId === section.id && (
+                        <LessonItemSkeleton count={1} />
+                      )}
                       {lessons.length === 0 ? (
-                        <div className="rounded-xl border border-dashed border-slate-800 p-6 text-center text-xs text-slate-500">
+                        <div className="rounded-xl border border-dashed border-white/[0.08] p-6 text-center text-xs text-slate-500">
                           No lessons in this module yet. Click "+ Add Lesson" to build your curriculum.
                         </div>
                       ) : (

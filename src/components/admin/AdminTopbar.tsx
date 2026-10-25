@@ -21,12 +21,12 @@ export function AdminTopbar({ onToggleMobile }: AdminTopbarProps) {
   const [showNotifications, setShowNotifications] = useState(false)
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-800/80 bg-[#0c1220]/90 px-4 sm:px-8 backdrop-blur-md">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-white/[0.06] bg-[#07090e]/90 px-4 sm:px-8 backdrop-blur-xl">
       {/* Left Area: Toggle & Search */}
       <div className="flex items-center gap-3.5 flex-1 max-w-md">
         <button
           onClick={onToggleMobile}
-          className="rounded-xl p-2 text-slate-400 hover:bg-slate-800/80 hover:text-white lg:hidden transition-colors"
+          className="rounded-xl p-2 text-slate-400 hover:bg-white/[0.05] hover:text-white lg:hidden transition-colors"
           aria-label="Open sidebar"
         >
           <Menu className="h-5 w-5" />
@@ -37,9 +37,9 @@ export function AdminTopbar({ onToggleMobile }: AdminTopbarProps) {
           <input
             type="text"
             placeholder="Search courses, students, orders..."
-            className="w-full rounded-full border border-slate-800 bg-slate-900/90 pl-9 pr-12 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:border-blue-500/70 focus:outline-none focus:ring-2 focus:ring-blue-500/15 transition-all"
+            className="w-full rounded-full border border-white/[0.07] bg-slate-950/80 pl-9 pr-12 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:border-brand-500/70 focus:outline-none focus:ring-2 focus:ring-brand-500/15 transition-all"
           />
-          <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md border border-slate-800 bg-slate-950 px-1.5 py-0.5 text-[10px] text-slate-500 font-mono font-medium">
+          <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md border border-white/[0.08] bg-slate-900 px-1.5 py-0.5 text-[10px] text-slate-400 font-mono font-medium">
             ⌘K
           </kbd>
         </div>
@@ -57,7 +57,7 @@ export function AdminTopbar({ onToggleMobile }: AdminTopbarProps) {
         <Link
           href="/"
           target="_blank"
-          className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:border-slate-700 hover:bg-slate-800 hover:text-white transition-all"
+          className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-white/[0.07] bg-slate-900/60 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:border-white/[0.15] hover:bg-slate-800 hover:text-white transition-all"
         >
           <span>Live Site</span>
           <ExternalLink className="h-3 w-3 text-slate-400" />
@@ -66,7 +66,7 @@ export function AdminTopbar({ onToggleMobile }: AdminTopbarProps) {
         {/* Create Course Button */}
         <Link
           href="/admin/courses/new"
-          className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-blue-600/30 hover:bg-blue-500 active:scale-95 transition-all"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-brand-600/30 hover:from-brand-500 hover:to-indigo-500 active:scale-95 transition-all"
         >
           <Plus className="h-3.5 w-3.5" />
           <span>Create Course</span>

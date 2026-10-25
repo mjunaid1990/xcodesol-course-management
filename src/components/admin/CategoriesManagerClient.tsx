@@ -6,6 +6,7 @@ import { Category } from '@/lib/db/queries'
 import { Modal } from '@/components/ui/Modal'
 import { FormField, Input, Textarea, Select, Button } from '@/components/ui/FormField'
 import { showToast } from '@/lib/toast'
+import { ListRowSkeleton } from '@/components/ui/Skeleton'
 import { createCategoryAction, deleteCategoryAction } from '@/app/actions/admin-actions'
 
 interface Props {
@@ -114,16 +115,19 @@ export function CategoriesManagerClient({ initialCategories }: Props) {
       </div>
 
       {/* Grid of Categories */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((cat, idx) => (
-          <div
-            key={cat.id}
-            className="flex flex-col rounded-2xl border border-slate-800 bg-[#0e1424] p-5 shadow-sm hover:border-slate-700 transition-all group"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 group-hover:scale-105 transition-transform">
-                <FolderTree className="h-5 w-5" />
-              </div>
+      {isPending ? (
+        <ListRowSkeleton count={3} />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((cat, idx) => (
+            <div
+              key={cat.id}
+              className="flex flex-col rounded-2xl border border-white/[0.07] bg-[#0c0e17]/80 luxury-card p-5 shadow-sm hover:border-brand-500/30 transition-all group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500/10 text-brand-400 border border-brand-500/20 group-hover:scale-105 transition-transform">
+                  <FolderTree className="h-5 w-5" />
+                </div>
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-slate-800 px-2.5 py-0.5 text-[11px] font-semibold text-slate-300">
                   {cat.courses_count || 0} {cat.courses_count === 1 ? 'Course' : 'Courses'}
@@ -156,7 +160,8 @@ export function CategoriesManagerClient({ initialCategories }: Props) {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
       {/* Add Category Modal */}
       <Modal

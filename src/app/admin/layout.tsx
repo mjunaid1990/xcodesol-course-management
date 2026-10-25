@@ -12,7 +12,7 @@ export default function AdminLayout({
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-[#090d16] text-slate-100">
+    <div className="flex min-h-screen bg-[#07080c] text-slate-100">
       {/* Sidebar */}
       <AdminSidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
 

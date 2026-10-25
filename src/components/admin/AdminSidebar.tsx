@@ -67,19 +67,19 @@ export function AdminSidebar({ mobileOpen, setMobileOpen }: AdminSidebarProps) {
       {/* Sidebar Container */}
       <aside
         className={cn(
-          'fixed top-0 bottom-0 left-0 z-50 flex w-72 flex-col border-r border-slate-800/80 bg-[#0d1322] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0',
+          'fixed top-0 bottom-0 left-0 z-50 flex w-72 flex-col border-r border-white/[0.06] bg-[#07090e] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0',
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         {/* Brand Header */}
-        <div className="flex h-16 items-center justify-between px-6 border-b border-slate-800/80">
+        <div className="flex h-16 items-center justify-between px-6 border-b border-white/[0.06]">
           <Link href="/admin" className="flex items-center gap-3 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 shadow-md shadow-brand-500/25 group-hover:scale-105 transition-transform">
               <GraduationCap className="h-4.5 w-4.5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-1.5 font-bold tracking-tight text-white text-sm">
-                Fieldnotes <span className="text-blue-400 font-extrabold text-[10px] px-1.5 py-0.2 rounded bg-blue-500/10 border border-blue-500/20">STUDIO</span>
+                Fieldnotes <span className="text-brand-400 font-extrabold text-[10px] px-1.5 py-0.2 rounded bg-brand-500/10 border border-brand-500/20">STUDIO</span>
               </div>
               <p className="text-[11px] font-medium text-slate-400">Admin & Course CMS</p>
             </div>
@@ -113,8 +113,8 @@ export function AdminSidebar({ mobileOpen, setMobileOpen }: AdminSidebarProps) {
                       className={cn(
                         'group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-150',
                         active
-                          ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/30 font-bold'
-                          : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                          ? 'bg-brand-600 text-white shadow-sm shadow-brand-600/30 font-bold'
+                          : 'text-slate-300 hover:bg-white/[0.04] hover:text-white'
                       )}
                     >
                       <div className="flex items-center gap-3">
