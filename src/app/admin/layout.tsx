@@ -19,8 +19,8 @@ export default function AdminLayout({
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         <AdminTopbar onToggleMobile={() => setMobileOpen(!mobileOpen)} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-8 lg:p-10">
-          <div className="mx-auto max-w-7xl space-y-8">{children}</div>
+        <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 sm:py-8 lg:px-9 lg:py-8">
+          <div className="mx-auto max-w-7xl space-y-7">{children}</div>
         </main>
       </div>
     </div>
