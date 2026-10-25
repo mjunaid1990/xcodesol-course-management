@@ -7,297 +7,180 @@ import {
   LayoutDashboard,
   BookOpen,
   FolderTree,
-  Video,
-  FolderArchive,
-  Tags,
   Users,
-  Ticket,
-  TrendingUp,
+  CreditCard,
   Star,
   FileText,
-  PenTool,
-  UserCheck,
-  Quote,
-  Image as ImageIcon,
   Settings,
+  Sparkles,
   ExternalLink,
-  GraduationCap,
-  Search,
-  LogOut,
   ChevronRight,
-  ShieldCheck,
+  GraduationCap,
   X,
 } from 'lucide-react'
-import { useNav } from '@payloadcms/ui'
+import { cn } from '@/lib/utils'
 
-type NavItem = {
-  label: string
-  href: string
-  icon: React.ComponentType<{ className?: string }>
-  badge?: string | number
-  exact?: boolean
+interface AdminSidebarProps {
+  mobileOpen: boolean
+  setMobileOpen: (open: boolean) => void
 }
 
-type NavGroup = {
-  groupTitle: string
-  items: NavItem[]
-}
+const NAV_ITEMS = [
+  {
+    group: 'Management',
+    items: [
+      { label: 'Overview', href: '/admin', icon: LayoutDashboard },
+      { label: 'Courses', href: '/admin/courses', icon: BookOpen },
+      { label: 'Categories', href: '/admin/categories', icon: FolderTree },
+      { label: 'Students', href: '/admin/students', icon: Users },
+      { label: 'Orders & Sales', href: '/admin/orders', icon: CreditCard },
+      { label: 'Reviews', href: '/admin/reviews', icon: Star, badge: '1 pending' },
+    ],
+  },
+  {
+    group: 'Content & Settings',
+    items: [
+      { label: 'Blog Posts', href: '/admin/posts', icon: FileText },
+      { label: 'Site Settings', href: '/admin/settings', icon: Settings },
+    ],
+  },
+]
 
-export function AdminSidebar() {
-  const pathname = usePathname() || '/admin'
-  const [filterQuery, setFilterQuery] = useState('')
+export function AdminSidebar({ mobileOpen, setMobileOpen }: AdminSidebarProps) {
+  const pathname = usePathname()
 
-  // Safe navigation context for responsive drawer behavior
-  let navOpen = true
-  let setNavOpen: (open: boolean) => void = () => {}
-  try {
-    const navCtx = useNav()
-    if (navCtx) {
-      navOpen = navCtx.navOpen
-      setNavOpen = navCtx.setNavOpen
-    }
-  } catch {
-    // context fallback
-  }
-
-  const navGroups: NavGroup[] = [
-    {
-      groupTitle: 'Overview',
-      items: [
-        { label: 'Studio Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
-        { label: 'Live Platform', href: '/', icon: ExternalLink },
-        { label: 'Student Portal', href: '/dashboard', icon: GraduationCap },
-      ],
-    },
-    {
-      groupTitle: 'Curriculum & LMS',
-      items: [
-        { label: 'Courses', href: '/admin/collections/courses', icon: BookOpen },
-        { label: 'Sections', href: '/admin/collections/sections', icon: FolderTree },
-        { label: 'Lessons', href: '/admin/collections/lessons', icon: Video },
-        { label: 'Resources', href: '/admin/collections/course-resources', icon: FolderArchive },
-        { label: 'Categories', href: '/admin/collections/categories', icon: Tags },
-      ],
-    },
-    {
-      groupTitle: 'Learners & Community',
-      items: [
-        { label: 'Users & Staff', href: '/admin/collections/users', icon: Users },
-        { label: 'Enrollments', href: '/admin/collections/enrollments', icon: Ticket },
-        { label: 'Lesson Progress', href: '/admin/collections/lesson-progress', icon: TrendingUp },
-        { label: 'Course Reviews', href: '/admin/collections/reviews', icon: Star },
-      ],
-    },
-    {
-      groupTitle: 'Editorial & Marketing',
-      items: [
-        { label: 'Pages', href: '/admin/collections/pages', icon: FileText },
-        { label: 'Journal Posts', href: '/admin/collections/posts', icon: PenTool },
-        { label: 'Faculty Leads', href: '/admin/collections/instructors', icon: UserCheck },
-        { label: 'Testimonials', href: '/admin/collections/testimonials', icon: Quote },
-      ],
-    },
-    {
-      groupTitle: 'System & Storage',
-      items: [
-        { label: 'Media Assets', href: '/admin/collections/media', icon: ImageIcon },
-        { label: 'Site Settings', href: '/admin/globals/site-settings', icon: Settings },
-      ],
-    },
-  ]
-
-  const isItemActive = (item: NavItem) => {
-    if (item.exact) {
-      return pathname === item.href
-    }
-    return pathname.startsWith(item.href)
-  }
-
-  const filteredGroups = navGroups
-    .map((group) => ({
-      ...group,
-      items: group.items.filter((item) =>
-        item.label.toLowerCase().includes(filterQuery.toLowerCase().trim()),
-      ),
-    }))
-    .filter((group) => group.items.length > 0)
-
-  const handleLinkClick = () => {
-    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      setNavOpen(false)
-    }
+  const isActive = (href: string) => {
+    if (href === '/admin') return pathname === '/admin'
+    return pathname.startsWith(href)
   }
 
   return (
     <>
-      {/* Mobile Drawer Overlay */}
-      {navOpen && (
+      {/* Mobile Backdrop */}
+      {mobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-30 lg:hidden transition-opacity"
-          onClick={() => setNavOpen(false)}
-          aria-hidden="true"
+          onClick={() => setMobileOpen(false)}
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden transition-opacity"
         />
       )}
 
+      {/* Sidebar Container */}
       <aside
-        className={`nav custom-admin-sidebar flex flex-col justify-between bg-white dark:bg-[#090d16] border-r border-slate-200 dark:border-zinc-800 shadow-sm font-sans select-none transition-transform duration-200 ease-in-out ${
-          navOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-        style={{
-          width: '280px',
-          minWidth: '280px',
-          maxWidth: '280px',
-          height: '100vh',
-          position: 'sticky',
-          top: 0,
-          zIndex: 40,
-        }}
+        className={cn(
+          'fixed top-0 bottom-0 left-0 z-50 flex w-72 flex-col border-r border-slate-800/80 bg-[#0d1322] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
       >
-        {/* Top Header & Brand Identity */}
-        <div className="p-4 border-b border-slate-200/90 dark:border-zinc-800/90 flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <Link
-              href="/admin"
-              onClick={handleLinkClick}
-              className="flex items-center gap-3 group transition-transform hover:scale-[1.01]"
-            >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-emerald-600 flex items-center justify-center text-white font-extrabold text-[14px] shadow-md shadow-indigo-500/25 flex-shrink-0">
-                FN
+        {/* Brand Header */}
+        <div className="flex h-18 items-center justify-between px-6 border-b border-slate-800/80">
+          <Link href="/admin" className="flex items-center gap-3 group">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-transform">
+              <GraduationCap className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 font-bold tracking-tight text-white text-base">
+                Fieldnotes <span className="text-blue-400 font-extrabold text-xs px-1.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20">STUDIO</span>
               </div>
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-[16.5px] text-slate-900 dark:text-white tracking-tight truncate">
-                    Fieldnotes
-                  </span>
-                  <span className="text-[10.5px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
-                    PRO
-                  </span>
-                </div>
-                <span className="text-[12px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
-                  Studio Command
-                </span>
-              </div>
-            </Link>
+              <p className="text-[11px] font-medium text-slate-400">Admin & Course CMS</p>
+            </div>
+          </Link>
 
-            {/* Mobile Close Button */}
-            <button
-              type="button"
-              onClick={() => setNavOpen(false)}
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-zinc-800 lg:hidden"
-              aria-label="Close Sidebar"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Quick Filter Search Input */}
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none z-10" />
-            <input
-              type="text"
-              value={filterQuery}
-              onChange={(e) => setFilterQuery(e.target.value)}
-              placeholder="Filter menu items..."
-              style={{ paddingLeft: '38px', paddingRight: '28px' }}
-              className="w-full py-2 text-[14px] bg-slate-50 dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors shadow-2xs"
-            />
-            {filterQuery && (
-              <button
-                type="button"
-                onClick={() => setFilterQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs"
-              >
-                ✕
-              </button>
-            )}
-          </div>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 lg:hidden"
+            aria-label="Close sidebar"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
-        {/* Scrollable Navigation Items */}
-        <div className="flex-1 overflow-y-auto px-3.5 py-3.5 space-y-6 custom-sidebar-scroll">
-          {filteredGroups.map((group) => (
-            <div key={group.groupTitle} className="space-y-1.5">
-              <h4 className="px-2.5 text-[12.5px] font-extrabold tracking-wider uppercase text-slate-400 dark:text-zinc-500">
-                {group.groupTitle}
-              </h4>
-
-              <div className="space-y-1">
-                {group.items.map((item) => {
-                  const IconComponent = item.icon
-                  const active = isItemActive(item)
-
+        {/* Navigation List */}
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+          {NAV_ITEMS.map((section, idx) => (
+            <div key={idx} className="space-y-1.5">
+              <div className="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                {section.group}
+              </div>
+              <nav className="space-y-1">
+                {section.items.map((item) => {
+                  const active = isActive(item.href)
+                  const Icon = item.icon
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
-                      onClick={handleLinkClick}
-                      className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-[14.5px] font-semibold transition-all ${
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        'group flex items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-150',
                         active
-                          ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 font-bold shadow-xs'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-zinc-900/70'
-                      }`}
+                          ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                          : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                      )}
                     >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <IconComponent
-                          className={`w-4.5 h-4.5 flex-shrink-0 transition-colors ${
-                            active
-                              ? 'text-indigo-600 dark:text-indigo-400'
-                              : 'text-slate-400 dark:text-zinc-500 group-hover:text-slate-700 dark:group-hover:text-slate-300'
-                          }`}
+                      <div className="flex items-center gap-3">
+                        <Icon
+                          className={cn(
+                            'h-4 w-4 transition-colors',
+                            active ? 'text-white' : 'text-slate-400 group-hover:text-slate-200'
+                          )}
                         />
-                        <span className="truncate">{item.label}</span>
+                        <span>{item.label}</span>
                       </div>
-
-                      {active ? (
-                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400 shadow-xs" />
-                      ) : (
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {item.badge && (
+                        <span
+                          className={cn(
+                            'text-[10px] font-semibold px-2 py-0.5 rounded-full',
+                            active
+                              ? 'bg-white/20 text-white'
+                              : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
+                          )}
+                        >
+                          {item.badge}
+                        </span>
                       )}
                     </Link>
                   )
                 })}
-              </div>
+              </nav>
             </div>
           ))}
 
-          {filteredGroups.length === 0 && (
-            <div className="py-8 text-center text-xs text-slate-400">
-              No menu items match &quot;{filterQuery}&quot;
+          {/* Quick Shortcuts Box */}
+          <div className="rounded-2xl border border-slate-800 bg-gradient-to-b from-slate-900/60 to-slate-900/20 p-4 text-xs space-y-3">
+            <div className="flex items-center gap-2 text-slate-200 font-semibold">
+              <Sparkles className="h-4 w-4 text-blue-400" />
+              <span>Public Live Site</span>
             </div>
-          )}
+            <p className="text-slate-400 leading-relaxed text-[11px]">
+              Preview changes to marketing pages, published lessons, and course catalog.
+            </p>
+            <Link
+              href="/"
+              target="_blank"
+              className="inline-flex items-center gap-1.5 text-blue-400 hover:text-blue-300 font-semibold text-xs group"
+            >
+              <span>Launch frontend</span>
+              <ExternalLink className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
         </div>
 
-        {/* Bottom Profile & Session Footer */}
-        <div className="p-3.5 border-t border-slate-200/90 dark:border-zinc-800/90 bg-slate-50/50 dark:bg-zinc-950/60">
-          <div className="flex items-center justify-between gap-2.5 p-2 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-xs">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="relative w-8.5 h-8.5 rounded-lg bg-gradient-to-br from-indigo-500 via-indigo-600 to-sky-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-xs">
-                <span>CA</span>
-                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-zinc-900 animate-pulse" />
+        {/* User / Instructor Footer */}
+        <div className="p-4 border-t border-slate-800/80 bg-slate-900/40">
+          <div className="flex items-center justify-between rounded-xl p-2 bg-slate-800/40 border border-slate-800/60">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 font-bold text-white text-xs shadow">
+                SJ
               </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-[14.5px] font-bold text-slate-900 dark:text-white truncate leading-tight">
-                  Course Admin
-                </span>
-                <div className="flex items-center gap-1 text-[11.5px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
-                  <ShieldCheck className="w-3 h-3 flex-shrink-0 text-emerald-500" />
-                  <span>Superadmin</span>
-                </div>
+              <div className="truncate">
+                <div className="text-xs font-semibold text-white truncate">Sarah Jenkins</div>
+                <div className="text-[10px] text-slate-400 truncate">Instructor & Admin</div>
               </div>
             </div>
-
-            <Link
-              href="/admin/logout"
-              title="Log Out of Fieldnotes Studio"
-              className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors flex-shrink-0"
-            >
-              <LogOut className="w-4 h-4" />
-            </Link>
+            <span className="h-2 w-2 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20 shrink-0" title="Online" />
           </div>
         </div>
       </aside>
     </>
   )
 }
-
-export default AdminSidebar

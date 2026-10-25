@@ -1,102 +1,54 @@
-# Fieldnotes Course Platform
+# Fieldnotes Course Platform & Studio
 
-A course and content platform built with Next.js 15, TypeScript, Payload CMS 3, and PostgreSQL. The public site and CMS run from one application; the CMS is available at `/admin`.
+A modern course management and e-learning platform built with **Next.js 15 (App Router)**, **TypeScript**, **Tailwind CSS**, and **PostgreSQL**.
 
-## Requirements
+## Features
 
-- Node.js 20.18.1 or later
-- PostgreSQL 15 or a compatible hosted PostgreSQL database
-- npm
+- **Modern Admin Dashboard:**
+  - KPI overview metrics (Revenue, Students, Courses, Satisfaction)
+  - Interactive Course Management (create, edit, publish/draft)
+  - Curriculum Builder with modular sections and lessons
+  - Free preview access switches and duration controls
+  - Student directory & enrollment tracker
+  - Stripe sales ledger & order status
+  - Review moderation with one-click live approval
+  - Category and taxonomy manager
+  - Blog & article publisher
+  - Global site settings (branding colors, announcements, navigation menus, Stripe)
+- **Database & Migrations for Vercel:**
+  - Pure JavaScript PostgreSQL driver (`postgres.js`)
+  - Serverless connection pooling with SSL support for Neon, Supabase, and Vercel Postgres
+  - Automatic migration runner (`node scripts/run-migrations.mjs`) executing on every Vercel build
+  - Starter seeder (`npm run seed`)
 
-## Local development
+## Tech Stack
 
-1. Install dependencies with `npm install`.
-2. Copy `.env.example` to `.env` and set the required values described below.
-3. Apply database migrations with `npx payload migrate`.
-4. Optionally set the four `SEED_*` credentials and run `npm run seed` to create sample content and staff accounts.
-5. Start the application with `npm run dev`.
-6. Visit `http://localhost:3000`. If you skipped seeding, create the first administrator at `/admin` when the database has no users.
+- **Framework:** Next.js 15 + React 19 + TypeScript
+- **Styling:** Tailwind CSS + Lucide Icons + Google Fonts (Inter)
+- **Database:** PostgreSQL (Neon / Supabase / Vercel Postgres)
+- **Payments:** Stripe Checkout & Webhook verification
+- **Deployment:** Vercel
 
-## Environment variables
+## Local Development
 
-| Variable | Purpose |
-| --- | --- |
-| `DATABASE_URL` | PostgreSQL connection string. Use a pooled connection for serverless deployment. |
-| `PAYLOAD_SECRET` | Long, private secret used by Payload for auth and sessions. |
-| `NEXT_PUBLIC_SERVER_URL` | Canonical site origin, such as `http://localhost:3000`. |
-| `PREVIEW_SECRET` | Separate random secret used by CMS draft preview links. |
-| `SUPABASE_S3_BUCKET` | Supabase Storage bucket name. Create it as a private bucket. |
-| `SUPABASE_S3_ACCESS_KEY_ID`, `SUPABASE_S3_SECRET_ACCESS_KEY` | Server-only S3 credentials from Supabase Storage settings. |
-| `SUPABASE_S3_ENDPOINT`, `SUPABASE_S3_REGION` | S3 endpoint and region shown in the Supabase Storage S3 configuration. |
-| `MUX_SIGNING_KEY_ID` | Mux signing key ID used by the server to issue playback tokens. |
-| `MUX_PRIVATE_KEY` | Base64-encoded private key paired with the Mux signing key ID. Keep server-side only. |
-| `STRIPE_SECRET_KEY` | Stripe secret API key for paid course checkout. |
-| `STRIPE_WEBHOOK_SECRET` | Signing secret for the Stripe webhook endpoint. |
-| `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` | Initial administrator credentials used only by `npm run seed`. |
-| `SEED_EDITOR_EMAIL`, `SEED_EDITOR_PASSWORD` | Initial editor credentials used only by `npm run seed`. |
-
-Never commit `.env` or production secrets. `.env.example` contains placeholders, not usable credentials.
-
-The seed command requires both email/password pairs, with passwords at least 12 characters. It keeps existing matching accounts and sample records, creates missing categories, instructor, courses, sections, lessons, and the `home` page, and does not reset existing passwords or content. Keep seed credentials out of production environments after the initial setup.
-
-## Database migrations
-
-After changing a Payload collection or global, generate a migration:
-
-```sh
-npx payload migrate:create describe-the-change
-```
-
-Review the generated file in `src/migrations`, commit it, and apply it to the target database:
-
-```sh
-npx payload migrate
-npx payload migrate:status
-```
-
-Run migrations as a deployment step before serving code that expects the new schema. Generate and apply the migration for the Reviews and Course Resources changes:
-
-```sh
-npx payload migrate:create add-reviews-and-course-resources
-npx payload migrate
-```
-
-Existing lesson attachments currently reference public Media records: download and re-upload those files through the new Course Resources relation, then update the lessons before removing the old media files.
-
-## Current features
-
-- Payload collections for users, media, categories, courses, sections, lessons, enrollments, lesson progress, reviews, pages, posts, instructors, and testimonials, plus site settings.
-- CMS-managed page blocks, drafts, autosave, scheduled publishing, preview links, and SEO fields.
-- Public course catalog and course pages, blog, CMS pages, sitemap, and robots file.
-- Student signup and login, free enrollment, Stripe checkout, lesson progress, private notes, and reviews requiring admin approval.
-- Collection access rules for staff, students, published content, and enrolled lessons.
-
-## Stripe checkout and webhooks
-
-Paid course prices are entered in major currency units. The current checkout supports USD, EUR, GBP, CAD, and AUD. Set both Stripe variables in `.env`. Configure a Stripe webhook to call `/api/payments/webhook` for:
-
-- `checkout.session.completed`
-- `checkout.session.async_payment_succeeded`
-- `charge.refunded`
-
-For local development, forward Stripe events with:
-
-```sh
-stripe listen --forward-to localhost:3000/api/payments/webhook
-```
-
-Use the signing secret printed by Stripe CLI as `STRIPE_WEBHOOK_SECRET`. Access is granted by verified webhook handling, not by the checkout success redirect. Fully refunded purchases revoke enrollment; partial refunds do not.
-
-## Content protection and integrations still needed
-
-Lesson API reads are limited to free previews and active enrollments in published courses. Public media is served through Payload's access-controlled route from a private Supabase Storage bucket. Lesson downloads use the same private bucket with Payload access checks and 15-minute signed download links. Create a private bucket, enable S3 access in Supabase Storage settings, generate server-side S3 credentials, and configure the `SUPABASE_S3_*` environment variables. Keep those credentials server-side. The Supabase Free plan currently includes 1 GB of storage and 5 GB of egress; projects can pause after a week without activity. The CMS limits uploads to 4 MiB. Video lessons use Mux signed playback IDs; the token endpoint checks published-course and enrollment access before issuing short-lived playback, thumbnail, and storyboard tokens. Create a Mux signing key, store the ID and base64 private key in server environment variables, and use the signed playback ID in the lesson. A public Mux playback ID remains public. Resend email delivery and distributed auth rate limiting are still not implemented.
-
-## Deployment
-
-Deploy the app to Vercel with a PostgreSQL database. Configure all environment variables in the Vercel project, set `NEXT_PUBLIC_SERVER_URL` to the deployed origin, and use persistent random values for `PAYLOAD_SECRET` and `PREVIEW_SECRET`. Apply committed database migrations before routing traffic to a release. Configure Stripe webhook delivery as described above.
-
-A Vercel deployment, provider credentials, and production readiness checks are not included in this repository setup.
-
-## Editor guide
-
-See [EDITOR_GUIDE.md](./EDITOR_GUIDE.md) for instructions on courses, pages, posts, navigation, students, reviews, and media.
+1. Install dependencies:
+   ```sh
+   npm install
+   ```
+2. Configure environment variables:
+   ```sh
+   cp .env.example .env.local
+   ```
+3. Run database migrations:
+   ```sh
+   npm run migrate
+   ```
+4. Seed starter courses and admin accounts:
+   ```sh
+   npm run seed
+   ```
+5. Start dev server:
+   ```sh
+   npm run dev
+   ```
+6. Open [http://localhost:3000](http://localhost:3000) for the public showcase or [http://localhost:3000/admin](http://localhost:3000/admin) for the visual Admin Dashboard.

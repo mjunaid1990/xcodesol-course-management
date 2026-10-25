@@ -7,6 +7,19 @@ export default {
   theme: {
     extend: {
       colors: {
+        brand: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+          950: '#172554',
+        },
         studio: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -17,12 +30,13 @@ export default {
           600: '#475569',
           700: '#334155',
           800: '#1e293b',
+          850: '#172033',
           900: '#0f172a',
-          950: '#020617',
+          950: '#0b0f19',
         },
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       keyframes: {
@@ -31,17 +45,19 @@ export default {
           '100%': { backgroundPosition: '200% 0' },
         },
         pulseGlow: {
-          '0%, 100%': { transform: 'scale(1)', opacity: '1', boxShadow: '0 0 0 0 rgba(16, 185, 129, 0.6)' },
-          '50%': { transform: 'scale(1.08)', opacity: '0.85', boxShadow: '0 0 0 8px rgba(16, 185, 129, 0)' },
+          '0%, 100%': { transform: 'scale(1)', opacity: '1', boxShadow: '0 0 0 0 rgba(59, 130, 246, 0.5)' },
+          '50%': { transform: 'scale(1.05)', opacity: '0.9', boxShadow: '0 0 0 10px rgba(59, 130, 246, 0)' },
         },
       },
       animation: {
         shimmer: 'shimmer 1.8s infinite linear',
-        pulseGlow: 'pulseGlow 2s infinite ease-in-out',
+        pulseGlow: 'pulseGlow 2.5s infinite ease-in-out',
       },
       boxShadow: {
         '2xs': '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
         'xs': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        'subtle': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+        'glow': '0 0 25px -5px rgba(59, 130, 246, 0.25)',
       },
     },
   },

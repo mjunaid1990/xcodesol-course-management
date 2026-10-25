@@ -4,39 +4,29 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run migrate:check && npm run migrate && cross-env NODE_OPTIONS=--no-deprecation next build",
+    "build": "node scripts/run-migrations.mjs && next build",
     "start": "next start",
     "lint": "next lint",
-    "payload": "payload",
-    "generate:types": "payload generate:types",
     "migrate": "node scripts/run-migrations.mjs",
-    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
-    "migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
-    "migrate:check": "node scripts/check-migrations.mjs",
-    "seed": "payload run src/seed.ts"
+    "db:reset": "node scripts/reset-db.mjs",
+    "seed": "node scripts/seed.mjs"
   },
   "engines": {
-    "node": "24.x"
+    "node": ">=20.x"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
-    "@mux/mux-player-react": "^3.14.0",
-    "@mux/ts": "^15.3.0",
-    "@payloadcms/db-postgres": "^3.37.0",
-    "@payloadcms/next": "^3.37.0",
-    "@payloadcms/richtext-lexical": "^3.37.0",
-    "@payloadcms/storage-s3": "^3.91.0",
-    "@payloadcms/ui": "^3.37.0",
-    "cross-env": "^7.0.3",
-    "graphql": "^16.10.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^14.6.0",
     "lucide-react": "^1.61.0",
     "next": "15.4.11",
-    "payload": "^3.37.0",
     "postgres": "^3.4.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "sonner": "^2.0.8",
     "stripe": "^18.3.0",
+    "tailwind-merge": "^3.0.2",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -44,7 +34,6 @@
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.6.1",
-    "cross-env": "^7.0.3",
     "postcss": "^8.5.31",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.7.3"

@@ -1,18 +1,14 @@
-import { withPayload } from '@payloadcms/next/withPayload'
-
+/** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
   images: {
-    remotePatterns: [],
-  },
-  async redirects() {
-    return [
+    remotePatterns: [
       {
-        source: '/admin/login',
-        destination: '/login?next=/admin',
-        permanent: false,
+        protocol: 'https',
+        hostname: '**',
       },
-    ]
+    ],
   },
 }
 
-export default withPayload(nextConfig)
+export default nextConfig

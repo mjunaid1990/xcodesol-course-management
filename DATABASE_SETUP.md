@@ -1,41 +1,70 @@
-# Production database setup
+# Production Database & Migration Setup
 
-Payload's Postgres adapter receives `DATABASE_URL` from the environment. In development, Payload can push the configured schema automatically. Production does not do that: a database connection string alone does not create the tables. The initial schema and later schema changes must be represented by Payload migrations.
+This platform runs natively on **Next.js 15 (App Router)** and **PostgreSQL** (Neon, Supabase, Vercel Postgres, or standard PostgreSQL).
 
-## Bootstrap the initial schema
+## Database Architecture
 
-1. In Supabase, open **Connect** and copy a database connection string. Use a direct connection when the machine can reach Supabase over IPv6; otherwise use the **Session pooler** connection. Avoid the transaction pooler for migration work. Keep the password private.
-2. Set `DATABASE_URL` locally to the target database connection string. Do not put it in a committed file.
-3. Generate the initial migration from this project configuration:
+- Database driver: Pure JavaScript `postgres` (postgres.js) with connection pooling and SSL support.
+- Schema definition: `src/lib/db/migrations/0001_initial_schema.sql`
+- Migration runner: `scripts/run-migrations.mjs`
+- Seeder: `scripts/seed.mjs`
 
-   ```sh
-   npm run migrate:create
-   ```
+### Tables Included
+1. `_migrations` - Tracks applied migrations and execution timestamps
+2. `users` - Admin, editor, and student accounts with secure password hashes
+3. `categories` - Course categories and tracks
+4. `courses` - Course metadata, pricing, summaries, level, SEO, and status
+5. `sections` - Course modules/chapters
+6. `lessons` - Video, text, PDF, and quiz lessons with free-preview toggles
+7. `course_resources` - Lesson attachments and downloadable files
+8. `enrollments` - Student course registrations
+9. `lesson_progress` - Per-lesson completion tracking and notes
+10. `reviews` - Student ratings and admin approval workflows
+11. `orders` - Stripe checkout transactions
+12. `coupons` - Promotional codes and discount values
+13. `pages` - Block-based CMS pages
+14. `posts` - Blog articles and engineering guides
+15. `testimonials` - Student testimonials
+16. `media` - Media library uploads
+17. `site_settings` - Global branding, navigation, announcement bar, and Stripe settings
 
-   Give it a name such as `initial_schema` when prompted. Review the generated SQL in `src/migrations`.
-4. Commit the generated migration files and push them to GitHub. Vercel's normal `npm run build` now checks that a migration exists, runs `payload migrate`, and only then builds Next.js. The deployment fails if migration application fails.
-5. Confirm the deployment succeeds and check the migration status if needed:
+## How Migrations Work on Vercel
 
-   ```sh
-   npm run migrate:status
-   ```
+When deployed to Vercel, the build command in `package.json` executes:
 
-For later collection or field changes, generate and review a new migration, commit it, and deploy. Vercel applies pending migrations during that build.
-
-Payload's [Postgres migration guide](https://payloadcms.com/docs/database/migrations) describes this workflow. Supabase recommends a direct connection for migrations, with session mode as an IPv4-compatible alternative ([connection options](https://supabase.com/docs/guides/database/connecting-to-postgres)).
-
-## Seed starter content
-
-Run the seed command only after the schema migration has been applied:
-
-```sh
-npm run seed
+```json
+"build": "node scripts/run-migrations.mjs && next build"
 ```
 
-The seeder requires `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_EDITOR_EMAIL`, and `SEED_EDITOR_PASSWORD`. Use unique email addresses and passwords of at least 12 characters. It is safe to run again: existing seeded records are kept, and only missing starter records are created.
+1. `scripts/run-migrations.mjs` automatically inspects `process.env.DATABASE_URL`.
+2. If `DATABASE_URL` is set:
+   - It connects to the Postgres database with SSL (`rejectUnauthorized: false` for pooled connections like Supabase/Neon).
+   - Creates `_migrations` if not already present.
+   - Discovers all `.sql` files in `src/lib/db/migrations/`.
+   - Executes pending migrations within an atomic transaction.
+   - Logs status and exits cleanly.
+3. If `DATABASE_URL` is not set (e.g. preview environment without DB):
+   - It gracefully logs a notice and allows the build to continue.
 
-The seed creates administrator and editor accounts, course categories, an instructor, two published starter courses with lesson text, a journal post, site navigation, and a CMS homepage. It does not create default passwords or replace existing page and settings content.
+## Local Database Setup
 
-## Vercel environment
-
-Set `DATABASE_URL` and `PAYLOAD_SECRET` for the Vercel Production environment. The build migration step uses `DATABASE_URL`, so it must point to the intended Postgres database and its database user must be allowed to create and alter tables. Run the seed command once against the same database if you want the sample content and staff accounts. Do not add database passwords or seed passwords to Git.
+1. Copy `.env.example` to `.env.local`:
+   ```sh
+   cp .env.example .env.local
+   ```
+2. Set your `DATABASE_URL` connection string:
+   ```env
+   DATABASE_URL=postgres://postgres:password@localhost:5432/course_platform
+   ```
+3. Run the migration script:
+   ```sh
+   npm run migrate
+   ```
+4. Seed starter courses and admin accounts:
+   ```sh
+   npm run seed
+   ```
+5. Start development:
+   ```sh
+   npm run dev
+   ```
