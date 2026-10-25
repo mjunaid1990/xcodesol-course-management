@@ -55,6 +55,7 @@ const needsSsl =
   databaseUrl.includes('neon.tech') ||
   databaseUrl.includes('supabase.co') ||
   databaseUrl.includes('vercel-storage.com') ||
+  databaseUrl.includes('prisma-postgres') ||
   databaseUrl.includes('pooler.supabase.com')
 
 const sql = postgres(databaseUrl, {
@@ -65,36 +66,6 @@ const sql = postgres(databaseUrl, {
 
 async function runMigrations() {
   try {
-    // 0. CLEAN RESET: Completely wipe any legacy Payload and outdated tables
-    console.log('[Migration Runner] 🧹 Cleaning up any legacy/old tables...')
-    await sql.unsafe(`
-      DROP TABLE IF EXISTS payload_preferences_rels CASCADE;
-      DROP TABLE IF EXISTS payload_preferences CASCADE;
-      DROP TABLE IF EXISTS payload_migrations CASCADE;
-      DROP TABLE IF EXISTS payload_locked_documents_rels CASCADE;
-      DROP TABLE IF EXISTS payload_locked_documents CASCADE;
-
-      DROP TABLE IF EXISTS course_resources CASCADE;
-      DROP TABLE IF EXISTS lesson_progress CASCADE;
-      DROP TABLE IF EXISTS reviews CASCADE;
-      DROP TABLE IF EXISTS enrollments CASCADE;
-      DROP TABLE IF EXISTS orders CASCADE;
-      DROP TABLE IF EXISTS coupons CASCADE;
-      DROP TABLE IF EXISTS lessons CASCADE;
-      DROP TABLE IF EXISTS sections CASCADE;
-      DROP TABLE IF EXISTS courses CASCADE;
-      DROP TABLE IF EXISTS categories CASCADE;
-      DROP TABLE IF EXISTS pages CASCADE;
-      DROP TABLE IF EXISTS posts CASCADE;
-      DROP TABLE IF EXISTS testimonials CASCADE;
-      DROP TABLE IF EXISTS media CASCADE;
-      DROP TABLE IF EXISTS site_settings CASCADE;
-      DROP TABLE IF EXISTS instructors CASCADE;
-      DROP TABLE IF EXISTS users CASCADE;
-      DROP TABLE IF EXISTS _migrations CASCADE;
-    `)
-    console.log('[Migration Runner] ✅ Old tables removed cleanly.')
-
     // 1. Ensure migrations table exists
     await sql`
       CREATE TABLE IF NOT EXISTS _migrations (
@@ -104,7 +75,11 @@ async function runMigrations() {
       );
     `
 
-    // 2. Scan migrations directory
+    // 2. Fetch already applied migrations
+    const appliedRows = await sql`SELECT name FROM _migrations ORDER BY id ASC;`
+    const appliedSet = new Set(appliedRows.map((r) => r.name))
+
+    // 3. Scan migrations directory
     const migrationsDir = path.join(rootDir, 'src', 'lib', 'db', 'migrations')
     if (!fs.existsSync(migrationsDir)) {
       console.log(`[Migration Runner] Directory ${migrationsDir} not found.`)
@@ -120,7 +95,12 @@ async function runMigrations() {
     let newlyAppliedCount = 0
 
     for (const file of files) {
-      console.log(`  ⚡ Applying clean schema migration: ${file}...`)
+      if (appliedSet.has(file)) {
+        console.log(`  ✓ Already applied: ${file}`)
+        continue
+      }
+
+      console.log(`  ⚡ Applying migration: ${file}...`)
       const filePath = path.join(migrationsDir, file)
       const migrationSql = fs.readFileSync(filePath, 'utf-8')
 
@@ -130,12 +110,53 @@ async function runMigrations() {
         await tx`INSERT INTO _migrations (name) VALUES (${file});`
       })
 
-      console.log(`  ✅ Successfully applied clean schema: ${file}`)
+      console.log(`  ✅ Successfully applied: ${file}`)
       newlyAppliedCount++
     }
 
+    // 4. Clean up any remaining legacy/versioning tables not in our 17 allowed tables
+    console.log('[Migration Runner] 🧹 Running legacy table cleanup check...')
+    await sql.unsafe(`
+      DO $$
+      DECLARE
+          r RECORD;
+      BEGIN
+          FOR r IN (
+              SELECT tablename 
+              FROM pg_tables 
+              WHERE schemaname = 'public' 
+                AND tablename NOT IN (
+                  'courses',
+                  'sections',
+                  'lessons',
+                  'course_resources',
+                  'categories',
+                  'lesson_progress',
+                  'users',
+                  'enrollments',
+                  'reviews',
+                  'testimonials',
+                  'orders',
+                  'coupons',
+                  'pages',
+                  'posts',
+                  'media',
+                  'site_settings',
+                  '_migrations'
+                )
+          ) LOOP
+              EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE';
+          END LOOP;
+      END $$;
+    `)
+    console.log('[Migration Runner] ✅ Database public schema is completely clean.')
+
     console.log('----------------------------------------------------')
-    console.log(`[Migration Runner] 🎉 Applied ${newlyAppliedCount} clean migration(s) successfully.`)
+    if (newlyAppliedCount === 0) {
+      console.log('[Migration Runner] ✨ Schema up to date. No pending migrations.')
+    } else {
+      console.log(`[Migration Runner] 🎉 Applied ${newlyAppliedCount} migration(s) successfully.`)
+    }
     console.log('----------------------------------------------------')
 
     await sql.end()

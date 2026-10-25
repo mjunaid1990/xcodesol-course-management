@@ -46,6 +46,7 @@ const needsSsl =
   databaseUrl.includes('neon.tech') ||
   databaseUrl.includes('supabase.co') ||
   databaseUrl.includes('vercel-storage.com') ||
+  databaseUrl.includes('prisma-postgres') ||
   databaseUrl.includes('pooler.supabase.com')
 
 const sql = postgres(databaseUrl, {
@@ -58,33 +59,21 @@ async function resetDb() {
 
   try {
     await sql.unsafe(`
-      DROP TABLE IF EXISTS payload_preferences_rels CASCADE;
-      DROP TABLE IF EXISTS payload_preferences CASCADE;
-      DROP TABLE IF EXISTS payload_migrations CASCADE;
-      DROP TABLE IF EXISTS payload_locked_documents_rels CASCADE;
-      DROP TABLE IF EXISTS payload_locked_documents CASCADE;
-
-      DROP TABLE IF EXISTS course_resources CASCADE;
-      DROP TABLE IF EXISTS lesson_progress CASCADE;
-      DROP TABLE IF EXISTS reviews CASCADE;
-      DROP TABLE IF EXISTS enrollments CASCADE;
-      DROP TABLE IF EXISTS orders CASCADE;
-      DROP TABLE IF EXISTS coupons CASCADE;
-      DROP TABLE IF EXISTS lessons CASCADE;
-      DROP TABLE IF EXISTS sections CASCADE;
-      DROP TABLE IF EXISTS courses CASCADE;
-      DROP TABLE IF EXISTS categories CASCADE;
-      DROP TABLE IF EXISTS pages CASCADE;
-      DROP TABLE IF EXISTS posts CASCADE;
-      DROP TABLE IF EXISTS testimonials CASCADE;
-      DROP TABLE IF EXISTS media CASCADE;
-      DROP TABLE IF EXISTS site_settings CASCADE;
-      DROP TABLE IF EXISTS instructors CASCADE;
-      DROP TABLE IF EXISTS users CASCADE;
-      DROP TABLE IF EXISTS _migrations CASCADE;
+      DO $$
+      DECLARE
+          r RECORD;
+      BEGIN
+          FOR r IN (
+              SELECT tablename 
+              FROM pg_tables 
+              WHERE schemaname = 'public'
+          ) LOOP
+              EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE';
+          END LOOP;
+      END $$;
     `)
 
-    console.log('✅ All old tables successfully dropped.')
+    console.log('✅ All tables successfully dropped in public schema.')
     console.log('Now run "npm run migrate" to apply the clean schema.')
     await sql.end()
     process.exit(0)
