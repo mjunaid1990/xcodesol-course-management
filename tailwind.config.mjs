@@ -39,6 +39,10 @@ export default {
         shimmer: 'shimmer 1.8s infinite linear',
         pulseGlow: 'pulseGlow 2s infinite ease-in-out',
       },
+      boxShadow: {
+        '2xs': '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+        'xs': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+      },
     },
   },
   plugins: [],

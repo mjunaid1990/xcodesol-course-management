@@ -108,7 +108,7 @@
 
 /* App Header Topbar */
 .app-header {
-  @apply sticky top-0 z-30 h-16 min-h-[64px] bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 px-6 sm:px-8 flex items-center justify-between shadow-2xs;
+  @apply sticky top-0 z-30 h-16 min-h-[64px] bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 px-6 sm:px-8 flex items-center justify-between shadow-sm;
 }
 
 .app-header__content,
@@ -136,7 +136,7 @@
 
 /* Document Controls Header (Sticky Action Bar) */
 .doc-controls {
-  @apply sticky top-16 z-20 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 px-6 sm:px-8 py-3 shadow-2xs;
+  @apply sticky top-16 z-20 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 px-6 sm:px-8 py-3 shadow-sm;
 }
 
 .doc-controls__wrapper {
@@ -172,7 +172,7 @@
 .collection-edit__form,
 .document-fields,
 .global-edit__form {
-  @apply bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-9 shadow-xs;
+  @apply bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-9 shadow-sm;
 }
 
 .render-fields {
@@ -215,7 +215,7 @@ label.field-label .required,
 .field-type:not(.relationship):not(.select) input[type='url'],
 .field-type:not(.relationship):not(.select) select,
 .field-type:not(.relationship):not(.select) textarea {
-  @apply w-full h-11 px-3.5 py-2.5 text-sm font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-700/80 rounded-xl transition-all duration-150 shadow-2xs;
+  @apply w-full h-11 px-3.5 py-2.5 text-sm font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-700/80 rounded-xl transition-all duration-150 shadow-sm;
 }
 
 .render-fields textarea,
@@ -257,7 +257,7 @@ label.field-label .required,
 
 /* ReactSelect outer control box */
 .rs__control {
-  @apply min-h-[44px] h-11 bg-slate-50 dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-700/80 rounded-xl px-1 flex items-center transition-all duration-150 cursor-pointer shadow-2xs;
+  @apply min-h-[44px] h-11 bg-slate-50 dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-700/80 rounded-xl px-1 flex items-center transition-all duration-150 cursor-pointer shadow-sm;
 }
 
 .rs__control:hover {
@@ -344,11 +344,11 @@ input.rs__input:focus {
 }
 
 button.relationship-add-new__add-button {
-  @apply w-11 h-11 min-w-[44px] bg-slate-50 dark:bg-zinc-900/60 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 border border-slate-200 dark:border-zinc-700/80 hover:border-indigo-300 dark:hover:border-indigo-800 rounded-xl flex items-center justify-center transition-all duration-150 cursor-pointer shadow-2xs;
+  @apply w-11 h-11 min-w-[44px] bg-slate-50 dark:bg-zinc-900/60 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 border border-slate-200 dark:border-zinc-700/80 hover:border-indigo-300 dark:hover:border-indigo-800 rounded-xl flex items-center justify-center transition-all duration-150 cursor-pointer shadow-sm;
 }
 
 button.relationship-add-new__add-button:hover {
-  @apply -translate-y-0.5 shadow-xs;
+  @apply -translate-y-0.5 shadow-sm;
 }
 
 /* Dropdown Menu & Items */
@@ -417,7 +417,7 @@ button.relationship-add-new__add-button:hover {
 .field-error,
 .field-type.error .field-error,
 .field-type .field-error.tooltip {
-  @apply inline-flex items-center gap-1.5 mt-2 px-3 py-1.5 text-xs font-semibold text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 rounded-lg static transform-none opacity-100 visible shadow-2xs;
+  @apply inline-flex items-center gap-1.5 mt-2 px-3 py-1.5 text-xs font-semibold text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 rounded-lg static transform-none opacity-100 visible shadow-sm;
 }
 
 .field-error::before,
@@ -443,7 +443,7 @@ button.relationship-add-new__add-button:hover {
 .field-type.join,
 .field-type.array-field,
 .field-type.blocks-field {
-  @apply bg-slate-50/70 dark:bg-zinc-950/50 border border-slate-200 dark:border-zinc-800 rounded-xl p-6 mt-4 shadow-2xs;
+  @apply bg-slate-50/70 dark:bg-zinc-950/50 border border-slate-200 dark:border-zinc-800 rounded-xl p-6 mt-4 shadow-sm;
 }
 
 .field-type.join .field-label,
@@ -460,11 +460,11 @@ button.relationship-add-new__add-button:hover {
 }
 
 .collection-list .search-bar {
-  @apply min-h-[46px] bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl shadow-xs;
+  @apply min-h-[46px] bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl shadow-sm;
 }
 
 .collection-list .table {
-  @apply rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs overflow-hidden;
+  @apply rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden;
 }
 
 .collection-list .table th {
