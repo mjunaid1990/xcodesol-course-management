@@ -117,6 +117,18 @@ export function CategoriesManagerClient({ initialCategories }: Props) {
       {/* Grid of Categories */}
       {isPending ? (
         <ListRowSkeleton count={3} />
+      ) : categories.length === 0 ? (
+        <div className="rounded-2xl border border-white/[0.06] bg-[#0c0e17]/80 luxury-card p-12 text-center">
+          <FolderTree className="h-10 w-10 text-slate-600 mx-auto mb-3" />
+          <h3 className="text-sm font-bold text-white">No categories created yet</h3>
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto mb-4">
+            Organize your course curriculum by creating your first category.
+          </p>
+          <Button onClick={() => setIsAddOpen(true)} variant="primary" size="sm">
+            <Plus className="h-4 w-4 mr-1.5" />
+            <span>Create Category</span>
+          </Button>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((cat, idx) => (

@@ -27,8 +27,10 @@ import { formatCurrency, formatDuration } from '@/lib/utils'
 import { showToast } from '@/lib/toast'
 import { Modal } from '@/components/ui/Modal'
 import { FormField, Input, Textarea, Select, Button } from '@/components/ui/FormField'
+import { useRouter } from 'next/navigation'
 import { LessonItemSkeleton } from '@/components/ui/Skeleton'
 import {
+  createCourseAction,
   updateCourseAction,
   createSectionAction,
   deleteSectionAction,
@@ -40,9 +42,11 @@ import {
 interface CourseEditorClientProps {
   initialCourse: Course
   initialSections: Section[]
+  isNew?: boolean
 }
 
-export function CourseEditorClient({ initialCourse, initialSections }: CourseEditorClientProps) {
+export function CourseEditorClient({ initialCourse, initialSections, isNew = false }: CourseEditorClientProps) {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState<'curriculum' | 'details' | 'pricing' | 'seo'>('curriculum')
   const [course, setCourse] = useState<Course>(initialCourse)
   const [sections, setSections] = useState<Section[]>(initialSections)
@@ -83,6 +87,11 @@ export function CourseEditorClient({ initialCourse, initialSections }: CourseEdi
   const handleCreateModule = () => {
     if (!newModuleTitle.trim()) {
       showToast.error('Validation Error', 'Module title is required.')
+      return
+    }
+
+    if (course.id.startsWith('course-') && isNew) {
+      showToast.error('Save Course First', 'Please click "Save Changes" to save the new course before adding modules.')
       return
     }
 
@@ -221,28 +230,62 @@ export function CourseEditorClient({ initialCourse, initialSections }: CourseEdi
   // Handle Full Course Details & Pricing Save
   const handleSaveCourse = () => {
     startTransition(async () => {
-      const res = await updateCourseAction(course.id, {
-        title: course.title,
-        slug: course.slug,
-        summary: course.summary || '',
-        description: course.description || '',
-        category_id: course.category_id || null,
-        level: course.level,
-        price: Number(course.price),
-        currency: course.currency || 'USD',
-        status: course.status,
-        thumbnail_url: course.thumbnail_url || null,
-        seo_title: course.seo_title || null,
-        seo_description: course.seo_description || null,
-      })
+      const isCreating = isNew || course.id.startsWith('course-')
 
-      if (res.success) {
-        showToast.success(
-          'Course Saved Successfully',
-          `"${course.title}" status is set to ${course.status.toUpperCase()}.`
-        )
+      if (isCreating) {
+        const res = await createCourseAction({
+          title: course.title,
+          slug: course.slug,
+          summary: course.summary || '',
+          description: course.description || '',
+          category_id: course.category_id || null,
+          level: course.level,
+          price: Number(course.price),
+          currency: course.currency || 'USD',
+          status: course.status,
+          thumbnail_url: course.thumbnail_url || null,
+          seo_title: course.seo_title || null,
+          seo_description: course.seo_description || null,
+        })
+
+        if (res.success) {
+          showToast.success(
+            'Course Created Successfully',
+            `"${course.title}" was saved to catalog.`
+          )
+          if (res.data?.id) {
+            setCourse((prev) => ({ ...prev, id: res.data.id, slug: res.data.slug || prev.slug }))
+          }
+          if (res.data?.slug) {
+            router.push(`/admin/courses/${res.data.slug}`)
+          }
+        } else {
+          showToast.error('Creation Failed', res.error || 'Could not create course.')
+        }
       } else {
-        showToast.error('Save Failed', res.error || 'Could not update course.')
+        const res = await updateCourseAction(course.id, {
+          title: course.title,
+          slug: course.slug,
+          summary: course.summary || '',
+          description: course.description || '',
+          category_id: course.category_id || null,
+          level: course.level,
+          price: Number(course.price),
+          currency: course.currency || 'USD',
+          status: course.status,
+          thumbnail_url: course.thumbnail_url || null,
+          seo_title: course.seo_title || null,
+          seo_description: course.seo_description || null,
+        })
+
+        if (res.success) {
+          showToast.success(
+            'Course Saved Successfully',
+            `"${course.title}" status is set to ${course.status.toUpperCase()}.`
+          )
+        } else {
+          showToast.error('Save Failed', res.error || 'Could not update course.')
+        }
       }
     })
   }

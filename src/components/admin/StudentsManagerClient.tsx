@@ -109,6 +109,20 @@ export function StudentsManagerClient({ initialStudents, courses }: Props) {
       {/* Students Table / Skeleton */}
       {isPending ? (
         <ListRowSkeleton count={5} />
+      ) : filteredStudents.length === 0 ? (
+        <div className="rounded-2xl border border-white/[0.07] bg-[#0c0e17]/85 luxury-card p-12 text-center">
+          <Users className="h-10 w-10 text-slate-600 mx-auto mb-3" />
+          <h3 className="text-sm font-bold text-white">No students found</h3>
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto mb-4">
+            {search ? 'No student matches your search query.' : 'No students have registered or been enrolled yet.'}
+          </p>
+          {!search && (
+            <Button onClick={() => setIsEnrollOpen(true)} variant="primary" size="sm">
+              <Plus className="h-4 w-4 mr-1.5" />
+              <span>Enroll First Student</span>
+            </Button>
+          )}
+        </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-white/[0.07] bg-[#0c0e17]/85 luxury-card shadow-sm">
           <div className="overflow-x-auto">

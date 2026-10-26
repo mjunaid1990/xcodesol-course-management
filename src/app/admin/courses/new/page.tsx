@@ -55,5 +55,5 @@ export default function NewCoursePage() {
     },
   ]
 
-  return <CourseEditorClient initialCourse={blankCourse} initialSections={blankSections} />
+  return <CourseEditorClient initialCourse={blankCourse} initialSections={blankSections} isNew={true} />
 }

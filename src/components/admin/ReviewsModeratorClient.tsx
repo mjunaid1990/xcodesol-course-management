@@ -53,8 +53,17 @@ export function ReviewsModeratorClient({ initialReviews }: Props) {
         </div>
       </div>
 
-      <div className="space-y-4">
-        {reviews.map((rev) => (
+      {reviews.length === 0 ? (
+        <div className="rounded-2xl border border-slate-800 bg-[#0e1424] p-12 text-center">
+          <Star className="h-10 w-10 text-slate-600 mx-auto mb-3" />
+          <h3 className="text-sm font-bold text-white">No reviews submitted yet</h3>
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+            When students complete course lessons and submit feedback ratings, they will appear here for publication review.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {reviews.map((rev) => (
           <div
             key={rev.id}
             className={`rounded-2xl border p-5 transition-all ${
@@ -126,6 +135,7 @@ export function ReviewsModeratorClient({ initialReviews }: Props) {
           </div>
         ))}
       </div>
+      )}
     </div>
   )
 }
